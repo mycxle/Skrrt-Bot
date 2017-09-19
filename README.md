@@ -1,7 +1,6 @@
 # Skrrt-Bot
 ### [http://skrrtgang.com](http://skrrtgang.com)
-
-###Commands:
+### Commands:
 *Ping
 *Say
 *8Ball

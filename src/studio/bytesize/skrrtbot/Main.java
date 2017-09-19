@@ -3,6 +3,7 @@ package studio.bytesize.skrrtbot;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
+import studio.bytesize.skrrtbot.commands.EightBallCommand;
 import studio.bytesize.skrrtbot.commands.PingCommand;
 import studio.bytesize.skrrtbot.commands.SayCommand;
 
@@ -10,7 +11,7 @@ import java.util.HashMap;
 
 public class Main {
     public static JDA jda;
-    public static final CommandParser parser = new CommandParser();
+    public static CommandParser parser = new CommandParser();
     public static HashMap<String, Command> commands = new HashMap<>();
 
     public static void main(String[] args) {
@@ -22,6 +23,7 @@ public class Main {
 
         commands.put("ping", new PingCommand());
         commands.put("say", new SayCommand());
+        commands.put("8ball", new EightBallCommand());
     }
 
     public static void handleCommand(CommandParser.CommandContainer cmd) {

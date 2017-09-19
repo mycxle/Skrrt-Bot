@@ -11,10 +11,13 @@ public class SayCommand implements Command {
     }
 
     public void action(String[] args, MessageReceivedEvent event) {
+        String str = "";
+
         for(String a : args) {
-            System.out.println(a);
+            str += a + " ";
         }
-        //event.getTextChannel().sendMessage("PONG").complete();
+
+        event.getTextChannel().sendMessage(str.substring(0, str.length() - 1)).complete();
     }
 
     public String help() {

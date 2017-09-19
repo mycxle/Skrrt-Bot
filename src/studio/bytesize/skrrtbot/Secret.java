@@ -4,31 +4,31 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 
 public class Secret {
-    public static String BOT_TOKEN;
+    private static String TOKEN = "null";
 
     public static String getToken() {
-        try {
-            BufferedReader br = new BufferedReader(new FileReader("token.txt"));
+        if(TOKEN.equals("null")) {
             try {
-                StringBuilder sb = new StringBuilder();
-                String line = br.readLine();
+                BufferedReader br = new BufferedReader(new FileReader("token.txt"));
+                try {
+                    StringBuilder sb = new StringBuilder();
+                    String line = br.readLine();
 
-                while (line != null) {
-                    sb.append(line);
-                    sb.append(System.lineSeparator());
-                    line = br.readLine();
+                    while (line != null) {
+                        sb.append(line);
+                        sb.append(System.lineSeparator());
+                        line = br.readLine();
+                    }
+                    TOKEN = sb.toString();
+                    TOKEN = TOKEN.substring(0, TOKEN.length() - 2);
+                } finally {
+                    br.close();
                 }
-                BOT_TOKEN = sb.toString();
-                BOT_TOKEN = BOT_TOKEN.substring(0, BOT_TOKEN.length() - 2);
-            } finally {
-                br.close();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch(Exception e) {
-            e.printStackTrace();
         }
 
-        System.out.println(BOT_TOKEN);
-
-        return BOT_TOKEN;
+        return TOKEN;
     }
 }

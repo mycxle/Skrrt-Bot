@@ -2,10 +2,11 @@ package studio.bytesize.skrrtbot.commands;
 
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import studio.bytesize.skrrtbot.Command;
+import studio.bytesize.skrrtbot.Rand;
 import studio.bytesize.skrrtbot.util.CommandHelper;
 
-public class SayCommand implements Command {
-    private final String HELP = "USAGE: /say <text>\nWill repeat whatever text is provided.";
+public class ChooseCommand implements Command {
+    private final String HELP = "USAGE: /choose <choice 1> or <choice 2> or <choice 3>\nWill pick from the choices provided. Unlimited amount of choices allowed.";
 
     public boolean called(String[] args, MessageReceivedEvent event) {
         return true;
@@ -14,16 +15,21 @@ public class SayCommand implements Command {
     public void action(String[] args, MessageReceivedEvent event) {
         String str = "";
 
-        if(args.length == 0) {
-            CommandHelper.sendTagMessage("You didn't tell me what to say...", event);
-            return;
-        }
+
 
         for(String a : args) {
             str += a + " ";
         }
 
-        CommandHelper.sendTagMessage(str.substring(0, str.length() - 1), event);
+        str = str.toLowerCase();
+        String[] choices = str.split(" or ");
+
+        if(choices.length <= 1) {
+            CommandHelper.sendTagMessage("You need to give me 2 or more choices...", event);
+            return;
+        }
+
+        CommandHelper.sendTagMessage("I choose " + choices[Rand.getRand(0, choices.length-1)], event);
     }
 
     public String help() {

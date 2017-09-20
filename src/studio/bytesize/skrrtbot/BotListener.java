@@ -5,7 +5,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 public class BotListener extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent e) {
-        if(e.getMessage().getContent().startsWith("~!") && e.getMessage().getAuthor().getId() != e.getJDA().getSelfUser().getId()) {
+        if(e.getMessage().getContent().startsWith("/") && e.getMessage().getAuthor().getId() != e.getJDA().getSelfUser().getId()) {
             Main.handleCommand(Main.parser.parse(e.getMessage().getContent().toLowerCase(), e));
         }
     }

@@ -8,3 +8,4 @@
 * choose
 * leet
 * coin
+* chucknorris

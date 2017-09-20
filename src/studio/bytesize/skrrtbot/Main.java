@@ -24,6 +24,7 @@ public class Main {
         commands.put("8ball", new EightBallCommand());
         commands.put("choose", new ChooseCommand());
         commands.put("help", new HelpCommand());
+        commands.put("coin", new CoinCommand());
     }
 
     public static void handleCommand(CommandParser.CommandContainer cmd) {

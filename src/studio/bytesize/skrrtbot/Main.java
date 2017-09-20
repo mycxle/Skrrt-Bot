@@ -25,6 +25,7 @@ public class Main {
         commands.put("choose", new ChooseCommand());
         commands.put("help", new HelpCommand());
         commands.put("coin", new CoinCommand());
+        commands.put("leet", new LeetCommand());
     }
 
     public static void handleCommand(CommandParser.CommandContainer cmd) {

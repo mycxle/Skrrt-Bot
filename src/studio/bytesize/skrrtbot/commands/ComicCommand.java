@@ -29,7 +29,6 @@ public class ComicCommand implements Command {
 
         if(args.length == 0) {
             str = "random";
-            return;
         } else {
             str = args[0];
         }
@@ -79,6 +78,9 @@ public class ComicCommand implements Command {
             } else if (str.equals("oatmeal")) {
                 doc = Jsoup.connect(oatmeal).get();
                 src = doc.select("#comic").select("img").first().attr("src");
+            } else {
+                CommandHelper.sendTagMessage("Not a valid comic name. Try \"/help comic\" for valid comic names.", event);
+                return;
             }
             CommandHelper.sendTagMessage(src, event);
         } catch (Exception e) {

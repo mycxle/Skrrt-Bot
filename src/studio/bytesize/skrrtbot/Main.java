@@ -1,11 +1,17 @@
 package studio.bytesize.skrrtbot;
 
+import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import studio.bytesize.skrrtbot.commands.*;
 
+import java.net.URL;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Scanner;
 
 public class Main {
     public static JDA jda;
@@ -27,6 +33,9 @@ public class Main {
         commands.put("coin", new CoinCommand());
         commands.put("leet", new LeetCommand());
         commands.put("chucknorris", new ChuckCommand());
+        commands.put("define", new DefineCommand());
+
+
     }
 
     public static void handleCommand(CommandParser.CommandContainer cmd) {

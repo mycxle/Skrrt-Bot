@@ -11,3 +11,4 @@
 * chucknorris
 * define
 * comic
+* rockpaperscissors

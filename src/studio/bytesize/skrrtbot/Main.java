@@ -35,6 +35,7 @@ public class Main {
         commands.put("chucknorris", new ChuckCommand());
         commands.put("define", new DefineCommand());
         commands.put("comic", new ComicCommand());
+        commands.put("rockpaperscissors", new RockPaperScissorsCommand());
 
 
     }

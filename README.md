@@ -9,3 +9,4 @@
 * leet
 * coin
 * chucknorris
+* define

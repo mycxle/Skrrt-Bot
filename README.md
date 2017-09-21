@@ -10,3 +10,4 @@
 * coin
 * chucknorris
 * define
+* comic

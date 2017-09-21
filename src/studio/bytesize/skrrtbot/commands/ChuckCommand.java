@@ -44,7 +44,7 @@ public class ChuckCommand implements Command {
             // there was some connection problem, or the file did not exist on the server,
             // or your URL was not in the right format.
             // think about what to do now, and put it here.
-            ex.printStackTrace(); // for now, simply output it.
+            CommandHelper.sendTagMessage(ex.getMessage(),event);
         }
     }
 

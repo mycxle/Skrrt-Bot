@@ -65,7 +65,7 @@ public class DefineCommand implements Command {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            CommandHelper.sendTagMessage(e.getMessage(),event);
         }
 
     }

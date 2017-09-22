@@ -36,8 +36,7 @@ public class Main {
         commands.put("define", new DefineCommand());
         commands.put("comic", new ComicCommand());
         commands.put("rockpaperscissors", new RockPaperScissorsCommand());
-
-
+        commands.put("meme", new MemeCommand());
     }
 
     public static void handleCommand(CommandParser.CommandContainer cmd) {

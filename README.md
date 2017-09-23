@@ -13,3 +13,4 @@
 * comic
 * rockpaperscissors
 * meme
+* weather

@@ -37,6 +37,7 @@ public class Main {
         commands.put("comic", new ComicCommand());
         commands.put("rockpaperscissors", new RockPaperScissorsCommand());
         commands.put("meme", new MemeCommand());
+        commands.put("weather", new WeatherCommand());
     }
 
     public static void handleCommand(CommandParser.CommandContainer cmd) {

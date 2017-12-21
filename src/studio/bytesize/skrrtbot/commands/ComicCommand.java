@@ -74,7 +74,7 @@ public class ComicCommand implements Command {
                 System.out.println( "redirected url: " + con.getURL() );
                 is.close();
                 doc = Jsoup.connect(con.getURL().toString()).get();
-                src = doc.select("#cc-comic").attr("src");
+                src = "https://www.smbc-comics.com" + doc.select("#cc-comic").attr("src");
             } else if (str.equals("oatmeal")) {
                 doc = Jsoup.connect(oatmeal).get();
                 src = doc.select("#comic").select("img").first().attr("src");

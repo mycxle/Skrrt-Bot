@@ -38,6 +38,9 @@ public class DefineCommand implements Command {
                 String key = entry.getKey();
                 Object value = entry.getValue();
                 System.out.println(key + " | " + value + "\n");
+                System.out.println(key + " | " + value + "\n");
+                System.out.println(key + " | " + value + "\n");
+                System.out.println(key + " | " + value + "\n");
             }
 
         } catch(Exception e) {

@@ -15,8 +15,6 @@ public class ChooseCommand implements Command {
     public void action(String[] args, MessageReceivedEvent event) {
         String str = "";
 
-
-
         for(String a : args) {
             str += a + " ";
         }

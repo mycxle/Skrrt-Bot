@@ -23,7 +23,7 @@ public class SayCommand implements Command {
             str += a + " ";
         }
 
-        CommandHelper.sendTagMessage(str.substring(0, str.length() - 1), event);
+        CommandHelper.sendMessage(str.substring(0, str.length() - 1), event);
     }
 
     public String help() {

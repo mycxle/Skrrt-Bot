@@ -46,6 +46,14 @@ public class WeatherCommand implements Command {
                 System.out.println("APIKEY: " + APIKEY + "\nstr= " + str);
 
                 String surl = "http://api.openweathermap.org/data/2.5/weather?APPID=" + APIKEY + "&units=imperial&q=" + URLEncoder.encode(str, "UTF-8");
+                if(str.contains("maine")) {
+                    surl = "http://api.openweathermap.org/data/2.5/weather?APPID=" + APIKEY + "&units=imperial&q=" + URLEncoder.encode("maine, us", "UTF-8");
+                } else if(str.contains("hell")) {
+                    CommandHelper.sendTagMessage("Right now Hell is pretty toasty.", event);
+                    return;
+                } else  if(str.contains("antarctica")) {
+                    surl = "Right now Antarctica is pretty chilly.";
+                }
                 System.out.println("surl: " +surl);
 
                 URL url = new URL(surl);

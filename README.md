@@ -14,3 +14,4 @@
 * rockpaperscissors
 * meme
 * weather
+* binary

@@ -15,3 +15,5 @@
 * meme
 * weather
 * binary
+* hex
+* octal

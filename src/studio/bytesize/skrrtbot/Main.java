@@ -39,6 +39,8 @@ public class Main {
         commands.put("meme", new MemeCommand());
         commands.put("weather", new WeatherCommand());
         commands.put("binary", new BinaryCommand());
+        commands.put("hex", new HexCommand());
+        commands.put("octal", new OctalCommand());
     }
 
     public static void handleCommand(CommandParser.CommandContainer cmd) {

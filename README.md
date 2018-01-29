@@ -17,3 +17,5 @@
 * binary
 * hex
 * octal
+* roll
+* translate

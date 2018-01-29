@@ -42,6 +42,7 @@ public class Main {
         commands.put("hex", new HexCommand());
         commands.put("octal", new OctalCommand());
         commands.put("roll", new RollCommand());
+        commands.put("translate", new TranslateCommand());
     }
 
     public static void handleCommand(CommandParser.CommandContainer cmd) {

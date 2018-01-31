@@ -1,24 +1,30 @@
 package studio.bytesize.skrrtbot;
 
-import com.fasterxml.jackson.annotation.JsonRootName;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import studio.bytesize.skrrtbot.commands.*;
 
-import java.net.URL;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Scanner;
 
 public class Main {
     public static JDA jda;
     public static CommandParser parser = new CommandParser();
     public static HashMap<String, Command> commands = new HashMap<>();
+    public static String PREFIX = "/";
 
     public static void main(String[] args) {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("prefix.txt"));
+            String line = br.readLine();
+            System.out.println(line);
+            PREFIX = line;
+        } catch (Exception e) {
+
+        }
+
         try {
             jda = new JDABuilder(AccountType.BOT).addEventListener(new BotListener()).setToken(Secret.getToken()).buildBlocking();
         } catch (Exception e) {
@@ -43,6 +49,7 @@ public class Main {
         commands.put("octal", new OctalCommand());
         commands.put("roll", new RollCommand());
         commands.put("translate", new TranslateCommand());
+        commands.put("prefix", new PrefixCommand());
     }
 
     public static void handleCommand(CommandParser.CommandContainer cmd) {

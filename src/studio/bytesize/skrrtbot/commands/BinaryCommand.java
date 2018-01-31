@@ -2,12 +2,10 @@ package studio.bytesize.skrrtbot.commands;
 
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import studio.bytesize.skrrtbot.Command;
-import studio.bytesize.skrrtbot.Rand;
+import studio.bytesize.skrrtbot.Help;
 import studio.bytesize.skrrtbot.util.CommandHelper;
 
 public class BinaryCommand implements Command {
-    private final String HELP = "USAGE: /binary message to convert to binary";
-
     public boolean called(String[] args, MessageReceivedEvent event) {
         return true;
     }
@@ -23,7 +21,6 @@ public class BinaryCommand implements Command {
             str += a + " ";
         }
         str = str.substring(0, str.length() - 1);
-        System.out.println(str);
 
         byte[] bytes = str.getBytes();
         StringBuilder binary = new StringBuilder();
@@ -42,7 +39,7 @@ public class BinaryCommand implements Command {
     }
 
     public String help() {
-        return HELP;
+        return Help.str("binary <text>\nConverts given text to binary.");
     }
 
     public void executed(boolean success, MessageReceivedEvent event) {

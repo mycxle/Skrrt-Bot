@@ -5,18 +5,12 @@ import studio.bytesize.skrrtbot.Command;
 import studio.bytesize.skrrtbot.util.CommandHelper;
 
 import java.io.BufferedReader;
-import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.Charset;
 import java.util.HashMap;
-import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class TranslateCommand implements Command {
     private final String HELP = "USAGE: /translate LANGUAGE text to translate";
@@ -204,9 +198,6 @@ public class TranslateCommand implements Command {
             CommandHelper.sendTagMessage(sb.toString().split("\"")[1],event);
         }
         catch(Exception ex) {
-            // there was some connection problem, or the file did not exist on the server,
-            // or your URL was not in the right format.
-            // think about what to do now, and put it here.
             CommandHelper.sendTagMessage(ex.getMessage(),event);
         }
     }
@@ -217,9 +208,5 @@ public class TranslateCommand implements Command {
 
     public void executed(boolean success, MessageReceivedEvent event) {
         return;
-    }
-
-    public class ChuckObj {
-        String joke;
     }
 }

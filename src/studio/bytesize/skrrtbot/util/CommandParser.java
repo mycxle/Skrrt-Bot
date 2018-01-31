@@ -1,6 +1,7 @@
-package studio.bytesize.skrrtbot;
+package studio.bytesize.skrrtbot.util;
 
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import studio.bytesize.skrrtbot.Main;
 
 import java.util.ArrayList;
 

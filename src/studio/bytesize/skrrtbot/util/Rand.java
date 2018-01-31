@@ -1,4 +1,4 @@
-package studio.bytesize.skrrtbot;
+package studio.bytesize.skrrtbot.util;
 
 import java.util.Random;
 

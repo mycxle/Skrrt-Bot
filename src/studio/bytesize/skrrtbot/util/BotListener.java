@@ -1,7 +1,8 @@
-package studio.bytesize.skrrtbot;
+package studio.bytesize.skrrtbot.util;
 
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import studio.bytesize.skrrtbot.Main;
 
 public class BotListener extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent e) {

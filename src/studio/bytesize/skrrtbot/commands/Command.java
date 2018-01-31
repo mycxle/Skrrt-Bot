@@ -1,4 +1,4 @@
-package studio.bytesize.skrrtbot;
+package studio.bytesize.skrrtbot.commands;
 
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 

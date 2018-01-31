@@ -1,8 +1,7 @@
 package studio.bytesize.skrrtbot.commands;
 
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import studio.bytesize.skrrtbot.Command;
-import studio.bytesize.skrrtbot.Help;
+import studio.bytesize.skrrtbot.util.Help;
 import studio.bytesize.skrrtbot.util.CommandHelper;
 
 public class PingCommand implements Command {

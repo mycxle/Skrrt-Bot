@@ -14,7 +14,7 @@ public class Secret {
                     StringBuilder sb = new StringBuilder();
                     String line = br.readLine();
 
-                    while (line != null) {
+                    while(line != null) {
                         sb.append(line);
                         sb.append(System.lineSeparator());
                         line = br.readLine();
@@ -24,7 +24,7 @@ public class Secret {
                 } finally {
                     br.close();
                 }
-            } catch (Exception e) {
+            } catch(Exception e) {
                 e.printStackTrace();
             }
         }

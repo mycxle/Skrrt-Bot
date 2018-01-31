@@ -2,14 +2,11 @@ package studio.bytesize.skrrtbot.commands;
 
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import studio.bytesize.skrrtbot.Command;
+import studio.bytesize.skrrtbot.Help;
 import studio.bytesize.skrrtbot.Main;
 import studio.bytesize.skrrtbot.util.CommandHelper;
 
-import java.util.HashMap;
-
 public class HelpCommand implements Command {
-    private final String HELP = "USAGE: ~!help";
-
     public boolean called(String[] args, MessageReceivedEvent event) {
         return true;
     }
@@ -17,12 +14,10 @@ public class HelpCommand implements Command {
     public void action(String[] args, MessageReceivedEvent event) {
         if(args.length == 0) {
             String str = "";
-
             for(String s : Main.commands.keySet()) {
                 str += (s + ", ");
             }
-
-            str = str.substring(0, str.length()-2);
+            str = str.substring(0, str.length() - 2);
 
             CommandHelper.sendTagMessage("Commands: " + str, event);
             return;
@@ -38,11 +33,10 @@ public class HelpCommand implements Command {
     }
 
     public String help() {
-        return HELP;
+        return Help.str("help <command>\nGives help on given command. If no command is given, lists all commands.");
     }
 
     public void executed(boolean success, MessageReceivedEvent event) {
         return;
     }
 }
-

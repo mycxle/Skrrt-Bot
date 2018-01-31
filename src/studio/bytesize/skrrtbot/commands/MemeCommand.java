@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import studio.bytesize.skrrtbot.Command;
+import studio.bytesize.skrrtbot.Help;
 import studio.bytesize.skrrtbot.util.CommandHelper;
 
 import java.io.BufferedReader;
@@ -15,14 +16,12 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MemeCommand implements Command {
-    private final String HELP = "USAGE: /meme <name of meme> \"top text\" \"bottom text\" (text must be inside quotes)\nWill generate you your very own meme!";
-
     private static HashMap<String, Integer> memeNames = new HashMap<>();
+
     static {
         memeNames.put("boromir", 61579);
         memeNames.put("batman", 438680);
@@ -132,23 +131,21 @@ public class MemeCommand implements Command {
 
     public void action(String[] args, MessageReceivedEvent event) {
         if(args.length <= 1) {
-            CommandHelper.sendTagMessage("Please provide the name of the meme, \"top text\" and \"bottom text\".", event);
+            CommandHelper.sendTagMessage("Please provide the name of the meme, \"top text\" and \"bottom text\"...", event);
             return;
         }
 
         try {
             BufferedReader br = new BufferedReader(new FileReader("imgflip.txt"));
             try {
-                StringBuilder sb = new StringBuilder();
                 String username = br.readLine();
                 String password = br.readLine();
-
-                int template = 0;
+                int template;
 
                 try {
                     template = memeNames.get(args[0].toLowerCase());
-                } catch (Exception e) {
-                    CommandHelper.sendTagMessage("That is not a valid meme. Check the list: \"/help meme\"", event);
+                } catch(Exception e) {
+                    CommandHelper.sendTagMessage("That is not a valid meme. Check the list: \"/help meme\"...", event);
                     return;
                 }
 
@@ -159,20 +156,14 @@ public class MemeCommand implements Command {
                     if(!dun) dun = true;
                 }
 
-                System.out.println("str: " + str);
-
                 String regexString = Pattern.quote("\"") + "(.*?)" + Pattern.quote("\"");
                 Pattern pattern = Pattern.compile(regexString);
-                // text contains the full text that you want to extract data
-
                 Matcher matcher = pattern.matcher(str);
-
                 ArrayList<String> text = new ArrayList<>();
 
-                while (matcher.find()) {
-                    String textInBetween = matcher.group(1); // Since (.*?) is capturing group 1
+                while(matcher.find()) {
+                    String textInBetween = matcher.group(1);
                     text.add(textInBetween);
-                    //CommandHelper.sendTagMessage(textInBetween, event);
                 }
 
                 if(text.size() == 1 && text.get(0).length() == 0) {
@@ -192,44 +183,33 @@ public class MemeCommand implements Command {
                 httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
 
                 InputStream stream = httpcon.getInputStream();
-
                 BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
                 StringBuilder out = new StringBuilder();
                 String line;
-                while ((line = reader.readLine()) != null) {
+                while((line = reader.readLine()) != null) {
                     out.append(line);
                 }
-                System.out.println(out.toString());   //Prints the string content read from input stream
                 reader.close();
 
                 String ss = out.toString();
-
                 ObjectMapper mapper = new ObjectMapper();
-                System.out.println(ss);
-
                 JsonNode rootNode = mapper.readTree(ss);
-
                 JsonNode dataNode = rootNode.path("data").path("url");
                 CommandHelper.sendTagMessage(dataNode.asText(), event);
-
             } finally {
                 br.close();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch(Exception e) {
+            CommandHelper.sendTagMessage(e.getMessage(), event);
         }
     }
 
     public String help() {
         String memeList = "";
-
-        System.out.println(memeNames.size());
-
         for(String s : memeNames.keySet()) {
             memeList += s + ", ";
         }
-
-        return HELP + "\nMEME NAMES: " + memeList.substring(0, memeList.length()-2);
+        return Help.str("meme <name of meme> \"top text\" \"bottom text\"\nWill generate you your very own meme! Text must be inside quotes.\nMEME NAMES: " + memeList.substring(0, memeList.length() - 2));
     }
 
     public void executed(boolean success, MessageReceivedEvent event) {

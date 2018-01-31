@@ -2,12 +2,11 @@ package studio.bytesize.skrrtbot.commands;
 
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import studio.bytesize.skrrtbot.Command;
+import studio.bytesize.skrrtbot.Help;
 import studio.bytesize.skrrtbot.Rand;
 import studio.bytesize.skrrtbot.util.CommandHelper;
 
 public class CoinCommand implements Command {
-    private final String HELP = "USAGE: /coin\nFlips a coin.";
-
     public boolean called(String[] args, MessageReceivedEvent event) {
         return true;
     }
@@ -17,7 +16,7 @@ public class CoinCommand implements Command {
     }
 
     public String help() {
-        return HELP;
+        return Help.str("coin\nFlips a coin.");
     }
 
     public void executed(boolean success, MessageReceivedEvent event) {

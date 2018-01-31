@@ -3,8 +3,8 @@ package studio.bytesize.skrrtbot;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public interface Command {
-    public boolean called(String[] args, MessageReceivedEvent event);
-    public void action(String[] args, MessageReceivedEvent event);
-    public String help();
-    public void executed(boolean success, MessageReceivedEvent event);
+    boolean called(String[] args, MessageReceivedEvent event);
+    void action(String[] args, MessageReceivedEvent event);
+    String help();
+    void executed(boolean success, MessageReceivedEvent event);
 }

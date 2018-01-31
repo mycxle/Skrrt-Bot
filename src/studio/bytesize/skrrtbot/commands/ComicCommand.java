@@ -4,6 +4,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import studio.bytesize.skrrtbot.Command;
+import studio.bytesize.skrrtbot.Help;
 import studio.bytesize.skrrtbot.Rand;
 import studio.bytesize.skrrtbot.util.CommandHelper;
 
@@ -12,9 +13,6 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class ComicCommand implements Command {
-    private final String HELP = "USAGE: /comic <name>\nWill post a random comic from the strip indicated." +
-            "\nCOMIC NAMES:\ncah - Cyanide & Happiness\nxkcd - XKCD\nsmbc - Saturday Morning Breakfast Cereal\noatmeal - The Oatmeal\nrandom - chooses randomly from above list";
-
     private String cah = "http://explosm.net/comics/random/";
     private String xkcd = "https://c.xkcd.com/random/comic/";
     private String smbc = "http://www.smbc-comics.com/random.php";
@@ -25,8 +23,7 @@ public class ComicCommand implements Command {
     }
 
     public void action(String[] args, MessageReceivedEvent event) {
-        String str = "";
-
+        String str;
         if(args.length == 0) {
             str = "random";
         } else {
@@ -35,8 +32,7 @@ public class ComicCommand implements Command {
 
         if(str.equals("random")) {
             int i = Rand.getRand(0, 3);
-
-            switch (i){
+            switch(i) {
                 case 0:
                     str = "cah";
                     break;
@@ -55,41 +51,41 @@ public class ComicCommand implements Command {
         }
 
         try {
-
             Document doc;
-            String src = "";
+            String src;
 
-            if (str.equals("cah")) {
+            if(str.equals("cah")) {
                 doc = Jsoup.connect(cah).get();
                 src = "http:" + doc.select("#main-comic").attr("src");
-            } else if (str.equals("xkcd")) {
+            } else if(str.equals("xkcd")) {
                 doc = Jsoup.connect(xkcd).get();
                 src = "http:" + doc.select("#comic").select("img").first().attr("src");
-            } else if (str.equals("smbc")) {
-                URLConnection con = new URL( smbc ).openConnection();
-                System.out.println( "orignal url: " + con.getURL() );
+            } else if(str.equals("smbc")) {
+                URLConnection con = new URL(smbc).openConnection();
                 con.connect();
-                System.out.println( "connected url: " + con.getURL() );
+
                 InputStream is = con.getInputStream();
-                System.out.println( "redirected url: " + con.getURL() );
                 is.close();
+
                 doc = Jsoup.connect(con.getURL().toString()).get();
                 src = "https://www.smbc-comics.com" + doc.select("#cc-comic").attr("src");
-            } else if (str.equals("oatmeal")) {
+            } else if(str.equals("oatmeal")) {
                 doc = Jsoup.connect(oatmeal).get();
                 src = doc.select("#comic").select("img").first().attr("src");
             } else {
-                CommandHelper.sendTagMessage("Not a valid comic name. Try \"/help comic\" for valid comic names.", event);
+                CommandHelper.sendTagMessage("That's not a valid comic name...", event);
                 return;
             }
             CommandHelper.sendTagMessage(src, event);
-        } catch (Exception e) {
-            CommandHelper.sendTagMessage(e.getMessage(),event);
+        } catch(Exception e) {
+            CommandHelper.sendTagMessage(e.getMessage(), event);
         }
     }
 
     public String help() {
-        return HELP;
+        return Help.str("comic <name>\nWill post a random comic from the strip indicated." +
+                "\nCOMIC NAMES:\ncah - Cyanide & Happiness\nxkcd - XKCD\nsmbc - Saturday Morning Breakfast Cereal" +
+                "\noatmeal - The Oatmeal\nrandom - chooses randomly from above list");
     }
 
     public void executed(boolean success, MessageReceivedEvent event) {

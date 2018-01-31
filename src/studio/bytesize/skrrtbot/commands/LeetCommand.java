@@ -2,6 +2,7 @@ package studio.bytesize.skrrtbot.commands;
 
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import studio.bytesize.skrrtbot.Command;
+import studio.bytesize.skrrtbot.Help;
 import studio.bytesize.skrrtbot.util.CommandHelper;
 
 import java.util.HashMap;
@@ -9,38 +10,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LeetCommand implements Command {
-    private final String HELP = "USAGE: /leet <text>\nWill convert text to leetspeak";
-
-    private static final HashMap<String, String> leet = new HashMap<String, String>();
-    static {
-        leet.put("a", "@");
-        leet.put("b", "8");
-        leet.put("c", "(");
-        leet.put("d", "|)");
-        leet.put("e", "3");
-        leet.put("f", "|=");
-        leet.put("g", "6");
-        leet.put("h", "4");
-        leet.put("i", "1");
-        leet.put("j", "_|");
-        leet.put("k", "|<");
-        leet.put("l", "1");
-        leet.put("m", "|\\\\/|");
-        leet.put("n", "|\\\\|");
-        leet.put("o", "0");
-        leet.put("p", "¶");
-        leet.put("q", "9");
-        leet.put("r", "Я");
-        leet.put("s", "$");
-        leet.put("t", "7");
-        leet.put("u", "|_|");
-        leet.put("v", "\\\\/");
-        leet.put("w", "\\\\/\\\\/");
-        leet.put("x", "><");
-        leet.put("y", "`/");
-        leet.put("z", "2");
-    }
-
     public boolean called(String[] args, MessageReceivedEvent event) {
         return true;
     }
@@ -57,15 +26,11 @@ public class LeetCommand implements Command {
         }
         str = str.toUpperCase();
 
-//        for(String s : leet.keySet()) {
-//            str = str.replace(s, leet.get(s));
-//        }
-
         CommandHelper.sendTagMessage(toLeetCode(str), event);
     }
 
     public String help() {
-        return HELP;
+        return Help.str("leet <text>\nConverts given text to leetspeak.");
     }
 
     public void executed(boolean success, MessageReceivedEvent event) {
@@ -103,10 +68,10 @@ public class LeetCommand implements Command {
         map.put('Y', "¥");
         map.put('Z', "z");
 
-        for (int i = 0; i < str.length(); i++) {
+        for(int i = 0; i < str.length(); i++) {
             char key = Character.toUpperCase(str.charAt(i));
             Matcher matcher = pattern.matcher(Character.toString(key));
-            if (matcher.find()) {
+            if(matcher.find()) {
                 result.append(key);
                 result.append(' ');
             } else {
@@ -115,6 +80,5 @@ public class LeetCommand implements Command {
             }
         }
         return result.toString();
-        //String[] retval=str.split(" ");
     }
 }

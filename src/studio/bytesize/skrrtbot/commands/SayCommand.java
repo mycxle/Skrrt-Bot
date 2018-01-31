@@ -2,11 +2,10 @@ package studio.bytesize.skrrtbot.commands;
 
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import studio.bytesize.skrrtbot.Command;
+import studio.bytesize.skrrtbot.Help;
 import studio.bytesize.skrrtbot.util.CommandHelper;
 
 public class SayCommand implements Command {
-    private final String HELP = "USAGE: /say <text>\nWill repeat whatever text is provided.";
-
     public boolean called(String[] args, MessageReceivedEvent event) {
         return true;
     }
@@ -27,7 +26,7 @@ public class SayCommand implements Command {
     }
 
     public String help() {
-        return HELP;
+        return Help.str("say <text>\nWill repeat whatever text is provided.");
     }
 
     public void executed(boolean success, MessageReceivedEvent event) {

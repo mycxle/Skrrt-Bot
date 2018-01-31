@@ -2,6 +2,7 @@ package studio.bytesize.skrrtbot.commands;
 
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import studio.bytesize.skrrtbot.Command;
+import studio.bytesize.skrrtbot.Help;
 import studio.bytesize.skrrtbot.util.CommandHelper;
 
 import java.io.BufferedReader;
@@ -13,8 +14,8 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 
 public class TranslateCommand implements Command {
-    private final String HELP = "USAGE: /translate LANGUAGE text to translate";
     private static HashMap<String, String> languages = new HashMap<>();
+
     static {
         languages.put("afrikaans", "af");
         languages.put("albanian", "sq");
@@ -150,60 +151,53 @@ public class TranslateCommand implements Command {
 
     public void action(String[] args, MessageReceivedEvent event) {
         if(args.length < 2) {
-            CommandHelper.sendTagMessage(HELP, event);
+            CommandHelper.sendTagMessage("Please provide the target language and some text to translate...", event);
             return;
         }
         try {
             String str = "";
-
             for(String a : args) {
                 str += a + " ";
             }
-
             str = str.toLowerCase();
+
             String[] choices = str.split(" ");
 
             String query = "";
-            for(int i = 1; i < choices.length; i++){
+            for(int i = 1; i < choices.length; i++) {
                 query += choices[i] + " ";
             }
-            query = query.substring(0, query.length()-1);
+            query = query.substring(0, query.length() - 1);
 
             String tl = choices[0];
-            for (String key : languages.keySet()) {
+            for(String key : languages.keySet()) {
                 if(tl.contains(key)) {
                     tl = languages.get(key);
                     break;
                 }
             }
 
-            System.out.println(tl);
-
             URL url = new URL("http://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=" + tl + "&dt=t&q="
                     + URLEncoder.encode(query, "UTF-8"));
-
             URLConnection connection = url.openConnection();
             connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
             connection.connect();
 
-            BufferedReader r  = new BufferedReader(new InputStreamReader(connection.getInputStream(), Charset.forName("UTF-8")));
-
+            BufferedReader r = new BufferedReader(new InputStreamReader(connection.getInputStream(), Charset.forName("UTF-8")));
             StringBuilder sb = new StringBuilder();
             String line;
-            while ((line = r.readLine()) != null) {
+            while((line = r.readLine()) != null) {
                 sb.append(line);
             }
-            System.out.println(sb.toString());
 
-            CommandHelper.sendTagMessage(sb.toString().split("\"")[1],event);
-        }
-        catch(Exception ex) {
-            CommandHelper.sendTagMessage(ex.getMessage(),event);
+            CommandHelper.sendTagMessage(sb.toString().split("\"")[1], event);
+        } catch(Exception e) {
+            CommandHelper.sendTagMessage(e.getMessage(), event);
         }
     }
 
     public String help() {
-        return HELP;
+        return Help.str("translate <language> <text>\nTranslates given text to provided language.");
     }
 
     public void executed(boolean success, MessageReceivedEvent event) {

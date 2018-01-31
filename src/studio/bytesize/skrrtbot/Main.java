@@ -19,15 +19,14 @@ public class Main {
         try {
             BufferedReader br = new BufferedReader(new FileReader("prefix.txt"));
             String line = br.readLine();
-            System.out.println(line);
             PREFIX = line;
-        } catch (Exception e) {
-
+        } catch(Exception e) {
+            e.printStackTrace();
         }
 
         try {
             jda = new JDABuilder(AccountType.BOT).addEventListener(new BotListener()).setToken(Secret.getToken()).buildBlocking();
-        } catch (Exception e) {
+        } catch(Exception e) {
             e.printStackTrace();
         }
 

@@ -29,7 +29,6 @@ async def rip_channel(message, client):
     await single_word_channel(message, client, "rip")
 
 async def counting_channel(message, client):
-    #return
     sec = False
     async for m in client.logs_from(message.channel, limit=2):
         if sec and message.author.id != bot_id:

@@ -42,7 +42,7 @@ custom_channels = {
     "392158484176830464": hi_channel,
     "392461625640222720": lol_channel,
     "392803097296240642": rip_channel,
-    "419025423461253120": counting_channel
+    "424697496565055499": counting_channel
 }
 
 async def call_command(message, commandDictionary):

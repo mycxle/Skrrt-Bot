@@ -1,5 +1,3 @@
-import re
-
 from helpers import *
 from admin_commands import *
 from commands import *
@@ -7,7 +5,7 @@ from custom_channels import *
 
 client = discord.Client()
 
-prefix = "-"
+prefix = ">"
 game = "with big goth tiddies"
 
 admin_commands = {
@@ -25,15 +23,18 @@ admin_commands = {
     "mute": mute_command,
     "unmute": unmute_command,
     "mutelist": mutelist_command,
-    "wipe": wipe_command
-}
-
-commands = {
+    "wipe": wipe_command,
+    "idlist": list_ids_command,
     "headcount": headcount_command,
     "bancount": bancount_command,
     "eval": evaluation_command,
     "coin": coin_command,
-    "userinfo": userinfo_command
+    "userinfo": userinfo_command,
+    "poll": poll_command
+}
+
+commands = {
+
 }
 
 custom_channels = {
@@ -64,14 +65,6 @@ async def on_ready():
 async def on_message(message):
     await call_custom_channel(message)
 
-    if message.author.top_role.id == "380618184379727883":
-        urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', message.content)
-        if len(urls) > 0:
-            await client.delete_message(message)
-            msg = await client.send_message(message.channel, message.author.mention + ' Sorry but normies aren\'t allowed to post links..')
-            await asyncio.sleep(3)
-            await client.delete_message(msg)
-
     if message.content.lower().startswith(prefix):
         await call_command(message, commands)
         if is_admin(message.author.id):
@@ -80,10 +73,6 @@ async def on_message(message):
 @client.event
 async def on_member_join(member):
     print("MEMBER JOINED")
-    # lst = member.server.roles
-    # for l in lst:
-    #     if l.id == "380618184379727883":
-    #         await client.add_roles(member, l)
     e = discord.Embed()
     e.set_thumbnail(url=member.avatar_url)
     e.title="Welcome to Skrrt Gang!"
@@ -92,7 +81,7 @@ async def on_member_join(member):
     message = await client.send_message(member.server.get_channel("355493390378336267"), embed=e)
     for x in client.get_all_emojis():
         print(x.name + " | " + x.id)
-        if x.id == "418597486324875275":
+        if x.id == "430626791950909440":
             await client.add_reaction(message, x)
 
     await client.add_reaction(message, "🇭")
@@ -100,7 +89,7 @@ async def on_member_join(member):
 
     for x in client.get_all_emojis():
         print(x.name + " | " + x.id)
-        if x.id == "418792186386186250":
+        if x.id == "430626845726343168":
             await client.add_reaction(message, x)
 
 with open("token.txt") as f:

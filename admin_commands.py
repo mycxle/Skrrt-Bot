@@ -1,5 +1,7 @@
 import discord
 import random
+from emoji import UNICODE_EMOJI
+import regex
 
 toe_punishment = ["https://cdn.discordapp.com/attachments/414956681362014228/414964856031019008/Screenshot_20180119-160311.jpg",
                   "https://cdn.discordapp.com/attachments/414956681362014228/414966414387052544/IMG_20180216_154625.jpg",
@@ -58,7 +60,7 @@ async def warn_command(message, client):
     await client.add_reaction(msg, "🇴")
     for x in client.get_all_emojis():
         print(x.name + " | " + x.id)
-        if x.id == "402606578383060995":
+        if x.id == "370747955608813568":
             await client.add_reaction(msg, x)
 
 async def ban_command(message, client, days=7):
@@ -184,3 +186,84 @@ async def wipe_command(message, client):
     wipe_user = user
     deleted = await client.purge_from(message.channel, limit=int(message.content.split()[2]), before=message, check=is_me)
     await client.send_message(message.channel, 'Deleted {} message(s)'.format(len(deleted)))
+
+async def list_ids_command(message, client):
+    arg = message.content.split()[1]
+
+    emojis_list = "Emojis:\n"
+    for x in client.get_all_emojis():
+        emojis_list += x.name + " | " + x.id + "\n"
+
+    roles_list = "Roles:\n"
+    lst = message.server.roles
+    for l in lst:
+        roles_list += l.name + " | " + l.id + "\n"
+
+    list_to_send = emojis_list
+    if arg == "e":
+        list_to_send = emojis_list
+    if arg == "r":
+        list_to_send = roles_list
+
+    print(list_to_send)
+
+    #await client.send_message(message.channel, list_to_send)
+
+regional_indicators = [
+    ""
+]
+
+def is_emoji(s):
+    return s in UNICODE_EMOJI
+def split_count(text):
+
+    emoji_list = []
+    data = regex.findall(r'\X', text)
+    for word in data:
+        if any(char in UNICODE_EMOJI for char in word):
+            print("WORD: " + word)
+            emoji_list.append(word)
+    flags = regex.findall(u'[\U0001F1E6-\U0001F1FF]', text)
+    return flags + emoji_list
+
+async def poll_command(message, client):
+    msgs = message.content.split()
+    print("Original message: " + message.content)
+    emojis = []
+    for m in msgs[2:]:
+        if m[0] == "<" and m[1] == ":":
+            emojis.append(m)
+            print("Appending: " + m)
+            continue
+
+    msg = message.content
+    counter = split_count(msg)
+    for c in counter:
+        print(c)
+        msg = msg.replace(c, "")
+    for e in emojis:
+        msg = msg.replace(e, "")
+
+    strng = ""
+    msgs = msg.split()
+    for m in msgs[2:]:
+        strng += m + " "
+    strng = strng[:-1]
+
+    print("The message: " +strng)
+    print("The Emojis: " + ' '.join(emoji for emoji in counter))
+
+    if msgs[1] == "t":
+        strng = "@everyone " + strng
+
+    sent_msg = await client.send_message(message.server.get_channel("424801570522267648"), strng)
+
+    for e in counter + emojis:
+        if(e[0] != "<"):
+            await client.add_reaction(sent_msg, e)
+        else:
+            for s in e.split(":"):
+                print(s)
+            for x in client.get_all_emojis():
+                if x.id == e.split(":")[2][:-1]:
+                    await client.add_reaction(sent_msg, x)

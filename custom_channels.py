@@ -1,6 +1,6 @@
 import asyncio
 
-bot_id = "418211794671239178"
+bot_id = "430603176463564810"
 
 async def single_word_channel(message, client, word):
     if message.content != word and message.author.id != bot_id:

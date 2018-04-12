@@ -3,7 +3,6 @@ from admin_commands import *
 from commands import *
 from custom_channels import *
 import os
-import boto
 
 client = discord.Client()
 
@@ -94,5 +93,5 @@ async def on_member_join(member):
         if x.id == "430626845726343168":
             await client.add_reaction(message, x)
 
-token = boto.s3.connection.S3Connection(os.environ['BOT_TOKEN'])
+token = os.environ['BOT_TOKEN']
 client.run(token)

@@ -1,7 +1,4 @@
 discord.py
 emoji
 regex
-random
-datetime
-time
 asyncio

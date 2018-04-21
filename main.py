@@ -77,7 +77,7 @@ async def on_member_join(member):
     e = discord.Embed()
     e.set_thumbnail(url=member.avatar_url)
     e.title="Welcome to Skrrt Gang!"
-    e.description=member.mention + " Remember to have a look at " + member.server.get_channel("428692044568068096").mention +" before you join in " + member.server.get_channel("355493390378336267").mention + "!"
+    e.description=member.mention + " Be sure to read " + member.server.get_channel("428692044568068096").mention + "!"
     e.colour=discord.Color.red()
     message = await client.send_message(member.server.get_channel("437332997235146775"), embed=e)
     for x in client.get_all_emojis():

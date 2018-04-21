@@ -46,7 +46,7 @@ async def counting_channel(message, client):
                         await client.delete_message(msg)
                 except:
                     await client.delete_message(message)
-                    msg = await client.send_message(message.channel, message.author.mention + ' that\'s the wrong number dummy!')
+                    msg = await client.send_message(message.channel, message.author.mention + ' that\'s not a number dummy!')
                     await asyncio.sleep(3)
                     await client.delete_message(msg)
         sec = True

@@ -95,7 +95,7 @@ async def on_member_join(member):
 
 @client.event
 async def on_member_remove(member):
-    await client.send_message(member.server.get_channel("437332997235146775"), "**OOF! " + member.name + "#" + member.discriminator " just left the gang... **😢")
+    await client.send_message(member.server.get_channel("437332997235146775"), "**OOF! " + member.name + "#" + str(member.discriminator) + " just left the gang... **😢")
 
 token = os.environ['BOT_TOKEN']
 client.run(token)

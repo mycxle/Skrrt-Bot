@@ -3,6 +3,7 @@ from admin_commands import *
 from commands import *
 from custom_channels import *
 import os
+from datetime import datetime
 
 client = discord.Client()
 
@@ -73,6 +74,17 @@ async def on_message(message):
 
 @client.event
 async def on_member_join(member):
+	created = datetime_from_utc_to_local(member.created_at)
+	current = datetime.now()
+	diff = current - created
+	days, seconds = diff.days, diff.seconds
+	hours = days * 24 + seconds // 3600
+	minutes = (seconds % 3600) // 60
+	seconds = seconds % 60
+	print("Account is " + hours + " old.")
+	if hours <= 72:
+		print("BAN THIS FUCKER")
+
     print("MEMBER JOINED")
     e = discord.Embed()
     e.set_thumbnail(url=member.avatar_url)

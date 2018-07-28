@@ -81,7 +81,7 @@ async def on_member_join(member):
 	hours = days * 24 + seconds // 3600
 	minutes = (seconds % 3600) // 60
 	seconds = seconds % 60
-	print("Account is " + hours + " old.")
+	print("Account is " + str(hours) + " old.")
 	if hours <= 72:
 		print("BAN THIS FUCKER")
 

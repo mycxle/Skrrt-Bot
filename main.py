@@ -74,6 +74,14 @@ async def on_message(message):
 
 @client.event
 async def on_member_join(member):
+	print("MEMBER JOINED")
+	e = discord.Embed()
+	e.set_thumbnail(url=member.avatar_url)
+	e.title="Welcome to Skrrt Gang!"
+	e.description=member.mention + " be sure to read " + member.server.get_channel("428692044568068096").mention
+	e.colour=discord.Color.red()
+	message = await client.send_message(member.server.get_channel("437332997235146775"), embed=e)
+
 	created = datetime_from_utc_to_local(member.created_at)
 	current = datetime.now()
 	diff = current - created
@@ -84,14 +92,9 @@ async def on_member_join(member):
 	print("Account is " + str(hours) + " old.")
 	if hours <= 72:
 		print("BAN THIS FUCKER")
+		await client.send_message(member.server.get_channel("470827844487086082"), "NEW ACCOUNT AUTO-BANNED: " + member.name + "#" + str(member.discriminator) + " | " + str(member.id))
+		await clent.ban(member, delete_message_days=1)
 
-	print("MEMBER JOINED")
-	e = discord.Embed()
-	e.set_thumbnail(url=member.avatar_url)
-	e.title="Welcome to Skrrt Gang!"
-	e.description=member.mention + " be sure to read " + member.server.get_channel("428692044568068096").mention
-	e.colour=discord.Color.red()
-	message = await client.send_message(member.server.get_channel("437332997235146775"), embed=e)
 	'''for x in client.get_all_emojis():
 		print(x.name + " | " + x.id)
 		if x.id == "430626791950909440":

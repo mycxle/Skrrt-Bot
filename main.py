@@ -90,9 +90,11 @@ async def on_member_join(member):
 	minutes = (seconds % 3600) // 60
 	seconds = seconds % 60
 	print("Account is " + str(hours) + " old.")
-	if hours <= 72:
+	if hours < 72:
 		print("BAN THIS FUCKER")
-		await client.send_message(member.server.get_channel("470827844487086082"), "NEW ACCOUNT AUTO-BANNED: " + member.name + "#" + str(member.discriminator) + " | " + str(member.id))
+		await client.send_message(member.server.get_channel("470827844487086082"),
+			"NEW ACCOUNT AUTO-BANNED: " + member.name + "#" + str(member.discriminator) + " | " + str(member.id) + " | Age: "
+			+ hours + "h " + minutes + "m " + seconds + "s")
 		await client.ban(member, delete_message_days=1)
 
 	'''for x in client.get_all_emojis():

@@ -82,20 +82,20 @@ async def on_member_join(member):
 	e.colour=discord.Color.red()
 	message = await client.send_message(member.server.get_channel("437332997235146775"), embed=e)
 
-	created = datetime_from_utc_to_local(member.created_at)
-	current = datetime.now()
-	diff = current - created
-	days, seconds = diff.days, diff.seconds
-	hours = days * 24 + seconds // 3600
-	minutes = (seconds % 3600) // 60
-	seconds = seconds % 60
-	print("Account is " + str(hours) + " old.")
-	if hours < 72:
-		print("BAN THIS FUCKER")
-		await client.send_message(member.server.get_channel("470827844487086082"),
-			"NEW ACCOUNT AUTO-BANNED: " + member.name + "#" + str(member.discriminator) + " | " + str(member.id) + " | Age: "
-			+ str(hours) + "h " + str(minutes) + "m " + str(seconds) + "s")
-		await client.ban(member, delete_message_days=1)
+	# created = datetime_from_utc_to_local(member.created_at)
+	# current = datetime.now()
+	# diff = current - created
+	# days, seconds = diff.days, diff.seconds
+	# hours = days * 24 + seconds // 3600
+	# minutes = (seconds % 3600) // 60
+	# seconds = seconds % 60
+	# print("Account is " + str(hours) + " old.")
+	# if hours < 72:
+	# 	print("BAN THIS FUCKER")
+	# 	await client.send_message(member.server.get_channel("470827844487086082"),
+	# 		"NEW ACCOUNT AUTO-BANNED: " + member.name + "#" + str(member.discriminator) + " | " + str(member.id) + " | Age: "
+	# 		+ str(hours) + "h " + str(minutes) + "m " + str(seconds) + "s")
+	# 	await client.ban(member, delete_message_days=1)
 
 	'''for x in client.get_all_emojis():
 		print(x.name + " | " + x.id)

@@ -1,118 +1,267 @@
-from helpers import *
-from admin_commands import *
-from commands import *
-from custom_channels import *
-import os
+from discord.ext.commands import Bot
+import discord
+import pyrebase
+import security
+import helpers
 from datetime import datetime
+import os
+import sys
 
-client = discord.Client()
+if len(sys.argv) >= 2 and sys.argv[1] == "l":
+	import secrets
 
-prefix = ">"
-game = "with big goth tiddies"
+db = None
+if len(sys.argv) >= 2 and sys.argv[1] == "l":
+	db = pyrebase.initialize_app(secrets.FIREBASE_CONFIG).database()
+else:
+	FIREBASE_CONFIG = {
+	    "apiKey" : os.environ['BOT_TOKEN'],
+	    "authDomain" : os.environ['BOT_TOKEN'],
+	    "databaseURL" : os.environ['BOT_TOKEN'],
+	    "storageBucket" : os.environ['BOT_TOKEN']
+	}
+	db = pyrebase.initialize_app(FIREBASE_CONFIG).database()
 
-admin_commands = {
-	"say": say_command,
-	"kick": kick_command,
-	"warn": warn_command,
-	"ban": ban_command,
-	"softban": softban_command,
-	"unban": unban_command,
-	"unbanall": unbanall_command,
-	"member": member_command,
-	"normie": normie_command,
-	"game": game_command,
-	"purge": purge_command,
-	"mute": mute_command,
-	"unmute": unmute_command,
-	"mutelist": mutelist_command,
-	"wipe": wipe_command,
-	"idlist": list_ids_command,
-	"headcount": headcount_command,
-	"bancount": bancount_command,
-	"eval": evaluation_command,
-	"coin": coin_command,
-	"userinfo": userinfo_command,
-	"poll": poll_command
-}
+skrrt_bot = Bot(command_prefix=">")
+sec = security.Security(db)
 
-commands = {
+autobans = []
 
-}
+def is_admin(id):
+	return{
+		'167797932156911616': True,
+		'408062249324773387': True
+	}.get(id, False)
 
-custom_channels = {
-	"392158484176830464": hi_channel,
-	"392461625640222720": lol_channel,
-	"392803097296240642": rip_channel,
-	"424697496565055499": counting_channel
-}
-
-async def call_command(message, commandDictionary):
-	cmd = message.content.split()[0][1:]
-	if cmd in commandDictionary:
-		await commandDictionary[cmd](message, client)
-
-async def call_custom_channel(message):
-	if message.channel.id in custom_channels:
-		await custom_channels[message.channel.id](message, client)
-
-@client.event
+@skrrt_bot.event
 async def on_ready():
-	print('Logged in as')
-	print(client.user.name)
-	print(client.user.id)
-	print('------')
-	await client.change_presence(game=discord.Game(name=game))
+	print("Bot logged in.")
+	await skrrt_bot.change_presence(game=discord.Game(name="with big goth tiddies"))
 
-@client.event
-async def on_message(message):
-	await call_custom_channel(message)
-
-	if message.content.lower().startswith(prefix):
-		await call_command(message, commands)
-		if is_admin(message.author.id):
-			await call_command(message, admin_commands)
-
-@client.event
+@skrrt_bot.event
 async def on_member_join(member):
+	welcome_channel = member.server.get_channel(str(sec.settings["welcome_channel"]))
+	rules_channel = member.server.get_channel(str(sec.settings["rules_channel"]))
+	logs_channel = member.server.get_channel(str(sec.settings["logs_channel"]))
+
+	member_name = member.name
+	newaccounts_age = int(sec.get("newaccounts_age")) * 24
+	server_locked = int(sec.get("is_locked_server"))
+
+	if server_locked == 1:
+		autobans.append(member.id)
+		await skrrt_bot.send_message(logs_channel,
+				"LOCKED SERVER AUTO-BAN: " + member_name + " | " + str(member.id))
+		return await skrrt_bot.ban(member, delete_message_days=1)
+
+	if newaccounts_age > 0:
+		created = helpers.datetime_from_utc_to_local(member.created_at)
+		current = datetime.now()
+		diff = current - created
+		days, seconds = diff.days, diff.seconds
+		hours = days * 24 + seconds // 3600
+		minutes = (seconds % 3600) // 60
+		seconds = seconds % 60
+		print("Account is " + str(hours) + " old.")
+		if hours < newaccounts_age:
+			autobans.append(member.id)
+			await skrrt_bot.send_message(logs_channel,
+				"NEW ACCOUNT AUTO-BANNED: " + member_name + " | " + str(member.id) + " | Age: "
+				+ str(hours) + "h " + str(minutes) + "m " + str(seconds) + "s")
+			return await skrrt_bot.ban(member, delete_message_days=1)
+
 	print("MEMBER JOINED")
 	e = discord.Embed()
 	e.set_thumbnail(url=member.avatar_url)
-	e.title="Welcome to Skrrt Gang!"
-	e.description=member.mention + " be sure to read " + member.server.get_channel("428692044568068096").mention
-	e.colour=discord.Color.red()
-	message = await client.send_message(member.server.get_channel("437332997235146775"), embed=e)
+	e.title="Welcome " + member_name + "!"
+	e.description="Be sure to read " + welcome_channel.mention
+	e.colour=discord.Color.green()
+	e.set_footer(text=str(member.id))
+	await skrrt_bot.send_message(welcome_channel, "**>MEMBER JOINED:** " + member.mention, embed=e)
 
-	created = datetime_from_utc_to_local(member.created_at)
-	current = datetime.now()
-	diff = current - created
-	days, seconds = diff.days, diff.seconds
-	hours = days * 24 + seconds // 3600
-	minutes = (seconds % 3600) // 60
-	seconds = seconds % 60
-	print("Account is " + str(hours) + " old.")
-	if hours < 72:
-		print("BAN THIS FUCKER")
-		await client.send_message(member.server.get_channel("470827844487086082"),
-			"NEW ACCOUNT AUTO-BANNED: " + member.name + "#" + str(member.discriminator) + " | " + str(member.id) + " | Age: "
-			+ str(hours) + "h " + str(minutes) + "m " + str(seconds) + "s")
-		await client.ban(member, delete_message_days=1)
-
-	'''for x in client.get_all_emojis():
-		print(x.name + " | " + x.id)
-		if x.id == "430626791950909440":
-			await client.add_reaction(message, x)
-
-	await client.add_reaction(message, "🇭")
-	await client.add_reaction(message, "🇮")
-
-	for x in client.get_all_emojis():
-		print(x.name + " | " + x.id)
-		if x.id == "430626845726343168":
-			await client.add_reaction(message, x)'''
-
-@client.event
+@skrrt_bot.event
 async def on_member_remove(member):
-	await client.send_message(member.server.get_channel("437332997235146775"), "**OOF! " + member.name + "#" + str(member.discriminator) + " just left the gang.. **😢")
+	print(autobans)
+	if str(member.id) in autobans:
+		autobans.remove(str(member.id))
+		return
 
-token = os.environ['BOT_TOKEN']
-client.run(token)
+	welcome_channel = member.server.get_channel(str(sec.settings["welcome_channel"]))
+	print("MEMBER LEFT")
+	e = discord.Embed()
+	e.title="Goodbye " + member.name + "!"
+	e.description="Have a great life!"
+	e.colour=discord.Color.red()
+	e.set_footer(icon_url=member.avatar_url ,text=str(member.id))
+	await skrrt_bot.send_message(welcome_channel, "**>MEMBER LEFT:** " + member.mention, embed=e)
+
+@skrrt_bot.event
+async def on_message(message):
+	if str(message.channel.id) == str(sec.get("counting_channel")):
+		secnd = False
+		async for m in skrrt_bot.logs_from(message.channel, limit=2):
+			if secnd and message.author.id != skrrt_bot.user.id:
+				if message.author.id == m.author.id:
+					await skrrt_bot.delete_message(message)
+				else:
+					try:
+						if int(message.content) != int(m.content) + 1:
+							await skrrt_bot.delete_message(message)
+					except:
+						await skrrt_bot.delete_message(message)
+			secnd = True
+	else:
+		await skrrt_bot.process_commands(message)
+
+@skrrt_bot.command(pass_context=True)
+async def whitelist(ctx):
+	if not is_admin(str(ctx.message.author.id)):
+		return
+	if sec.get("whitelist") == 1:
+		sec.set("whitelist", 0)
+		await skrrt_bot.say("Whitelist Only: DISABLED")
+	else:
+		sec.set("whitelist", 1)
+		await skrrt_bot.say("Whitelist Only: ENABLED")
+
+@skrrt_bot.command(pass_context=True)
+async def set(ctx, *args):
+	if not is_admin(str(ctx.message.author.id)):
+		return
+	if len(args) != 2:
+		return await skrrt_bot.say("ERROR: Command takes 2 arguments")
+	try:
+		sec.set(args[0], int(args[1]))
+	except Exception as e:
+		await skrrt_bot.say("ERROR: " + str(e))
+
+@skrrt_bot.command(pass_context=True)
+async def get(ctx, *args):
+	if not is_admin(str(ctx.message.author.id)):
+		return
+	if len(args) == 0:
+		s = ""
+		for k in sec.settings:
+			s += str(k) + "(" + str(sec.settings[k]) + "), "
+		await skrrt_bot.say("ALL VARIABLES: " + s[:-2])
+	else:
+		try:
+			await skrrt_bot.say(sec.get(args[0]))
+		except Exception as e:
+			await skrrt_bot.say("ERROR: " + str(e))
+
+@skrrt_bot.command(pass_context=True)
+async def add(ctx, *args):
+	if not is_admin(str(ctx.message.author.id)):
+		return
+	if len(args) < 2:
+		return await skrrt_bot.say("ERROR: Command takes 2 arguments")
+	try:
+		new_args = list(args[1:])
+		sec.add(args[0], ' '.join(new_args))
+	except Exception as e:
+		await skrrt_bot.say("ERROR: " + str(e))
+
+@skrrt_bot.command(pass_context=True)
+async def remove(ctx, *args):
+	if not is_admin(str(ctx.message.author.id)):
+		return
+	if len(args) < 2:
+		return await skrrt_bot.say("ERROR: Command takes 2 arguments")
+	try:
+		sec.remove(args[0], args[1])
+	except Exception as e:
+		await skrrt_bot.say("ERROR: " + str(e))
+
+async def lock_unlock_channels(ctx, val):
+	unlck = None
+	if val == 1:
+		unlck = False
+
+	sec.set("is_locked_channels", val)
+	everyone_overwrite = discord.PermissionOverwrite(send_messages=unlck)
+	everyone_role = None
+	for r in ctx.message.server.roles:
+		if r.is_everyone:
+			everyone_role = r
+	for c in sec.settings["channels_list"]:
+		channel = ctx.message.server.get_channel(c)
+		if channel in ctx.message.server.channels:
+			await skrrt_bot.edit_channel_permissions(channel, everyone_role, everyone_overwrite)
+
+@skrrt_bot.command(pass_context=True)
+async def lock(ctx, *args):
+	if not is_admin(str(ctx.message.author.id)):
+		return
+	if len(args) > 0:
+		if args[0] == "s":
+			if sec.get("is_locked_server") == 1:
+				return await skrrt_bot.say("SERVER IS ALREADY LOCKED!")
+			sec.set("is_locked_server", 1)
+			await skrrt_bot.say("SERVER IS LOCKED!")
+		elif args[0] == "c":
+			if sec.get("is_locked_channels") == 1:
+				return await skrrt_bot.say("CHANNELS ARE ALREADY LOCKED!")
+			await lock_unlock_channels(ctx, 1)
+			await skrrt_bot.say("CHANNELS ARE LOCKED!")
+		else:
+			await skrrt_bot.say("ERROR: Invalid argument")
+	else:
+		if sec.get("is_locked_server") == 1 and sec.get("is_locked_channels") == 1:
+			return await skrrt_bot.say("WE ARE ALREADY FULLY LOCKED!")
+		sec.set("is_locked_server", 1)
+		await lock_unlock_channels(ctx, 1)
+		await skrrt_bot.say("WE ARE NOW FULLY LOCKED!")
+
+@skrrt_bot.command(pass_context=True)
+async def unlock(ctx, *args):
+	if not is_admin(str(ctx.message.author.id)):
+		return
+	if len(args) > 0:
+		if args[0] == "s":
+			if sec.get("is_locked_server") == 0:
+				return await skrrt_bot.say("SERVER IS ALREADY UNLOCKED!")
+			sec.set("is_locked_server", 0)
+			await skrrt_bot.say("SERVER IS UNLOCKED!")
+		elif args[0] == "c":
+			if sec.get("is_locked_channels") == 0:
+				return await skrrt_bot.say("CHANNELS ARE ALREADY UNLOCKED!")
+			await lock_unlock_channels(ctx, 0)
+			await skrrt_bot.say("CHANNELS ARE UNLOCKED!")
+		else:
+			await skrrt_bot.say("ERROR: Invalid argument")
+	else:
+		if sec.get("is_locked_server") == 0 and sec.get("is_locked_channels") == 0:
+			return await skrrt_bot.say("WE ARE ALREADY FULLY UNLOCKED!")
+		sec.set("is_locked_server", 0)
+		await lock_unlock_channels(ctx, 0)
+		await skrrt_bot.say("WE ARE NOW FULL UNLOCKED!")
+
+@skrrt_bot.command(pass_context=True)
+async def headcount(ctx, *args):
+	if not is_admin(str(ctx.message.author.id)):
+		return
+	print("headcount")
+	members = ctx.message.server.members
+	total = 0
+	for m in members:
+		total += 1
+	await skrrt_bot.say('There are ' +str(total) + ' members on this server')
+
+@skrrt_bot.command(pass_context=True)
+async def bancount(ctx, *args):
+	if not is_admin(str(ctx.message.author.id)):
+		return
+	lst = await skrrt_bot.get_bans(ctx.message.server)
+	total = 0;
+	print(lst)
+	for item in lst:
+		total += 1
+	await skrrt_bot.say('There are ' +str(total) + ' people banned')
+
+token = None
+if len(sys.argv) >= 2 and sys.argv[1] == "l":
+	token = secrets.BOT_TOKEN
+else:
+	token = os.environ['BOT_TOKEN']
+skrrt_bot.run(token)

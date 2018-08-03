@@ -1,3 +1,2 @@
-.idea/
-token.txt
-Yeet-Bot.iml
+__pycache__/
+secrets.py

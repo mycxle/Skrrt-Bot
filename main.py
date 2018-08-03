@@ -74,7 +74,7 @@ async def on_member_join(member):
 	e = discord.Embed()
 	e.set_thumbnail(url=member.avatar_url)
 	e.title="Welcome " + member_name + "!"
-	e.description="Be sure to read " + welcome_channel.mention
+	e.description="Be sure to read " + rules_channel.mention
 	e.colour=discord.Color.green()
 	e.set_footer(text=str(member.id))
 	await skrrt_bot.send_message(welcome_channel, "**>MEMBER JOINED:** " + member.mention, embed=e)

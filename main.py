@@ -15,10 +15,10 @@ if len(sys.argv) >= 2 and sys.argv[1] == "l":
 	db = pyrebase.initialize_app(secrets.FIREBASE_CONFIG).database()
 else:
 	FIREBASE_CONFIG = {
-	    "apiKey" : os.environ['BOT_TOKEN'],
-	    "authDomain" : os.environ['BOT_TOKEN'],
-	    "databaseURL" : os.environ['BOT_TOKEN'],
-	    "storageBucket" : os.environ['BOT_TOKEN']
+	    "apiKey" : os.environ['apiKey'],
+	    "authDomain" : os.environ['authDomain'],
+	    "databaseURL" : os.environ['databaseURL'],
+	    "storageBucket" : os.environ['storageBucket']
 	}
 	db = pyrebase.initialize_app(FIREBASE_CONFIG).database()
 

@@ -259,6 +259,17 @@ async def bancount(ctx, *args):
 		total += 1
 	await skrrt_bot.say('There are ' +str(total) + ' people banned')
 
+@skrrt_bot.command(pass_context=True)
+async def goon(ctx, *args):
+	if not is_admin(str(ctx.message.author.id)):
+		return
+	try:
+		goon_role = ctx.message.server.roles.get("474056561707450370")
+		for m in ctx.message.mentions:
+			await skrrt_bot.add_roles(m, goon_role)
+	except Exception as e:
+		await skrrt_bot.say("EXCEPTION: " + str(e))
+
 token = None
 if len(sys.argv) >= 2 and sys.argv[1] == "l":
 	token = secrets.BOT_TOKEN

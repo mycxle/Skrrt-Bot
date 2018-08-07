@@ -264,7 +264,7 @@ async def goon(ctx, *args):
 	if not is_admin(str(ctx.message.author.id)):
 		return
 	try:
-		goon_role = ctx.message.server.roles.get("474056561707450370")
+		goon_role = discord.utils.get(ctx.message.server.roles, id="474056561707450370")
 		for m in ctx.message.mentions:
 			await skrrt_bot.add_roles(m, goon_role)
 	except Exception as e:

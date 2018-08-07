@@ -265,8 +265,26 @@ async def goon(ctx, *args):
 		return
 	try:
 		goon_role = discord.utils.get(ctx.message.server.roles, id="474056561707450370")
-		for m in ctx.message.mentions:
+		m = None
+		try:
+			m = ctx.message.mentions[0]
+		except:
+			if len(args) > 0:
+				try:
+					user_id = int(args[0])
+					m = discord.utils.get(ctx.message.server.members, id=str(user_id))
+				except Exception as e:
+					await skrrt_bot.say("EXCEPTION: " + str(e))
+			else:
+				await skrrt_bot.say("Please provide a user...")
+				return
+
+		if goon_role in m.roles:
+			await skrrt_bot.remove_roles(m, goon_role)
+			await skrrt_bot.say(str(m.name + " is no longer a goon!"))
+		else:
 			await skrrt_bot.add_roles(m, goon_role)
+			await skrrt_bot.say(str(m.name + " is now a goon!"))
 	except Exception as e:
 		await skrrt_bot.say("EXCEPTION: " + str(e))
 

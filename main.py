@@ -308,6 +308,8 @@ async def goon(ctx, *args):
 @skrrt_bot.command(pass_context=True)
 async def everyone(ctx, *args):
     e = discord.utils.get(ctx.message.server.roles, id="428709693540794395")
+    skrrt_bot.edit_role(ctx.message.server, e, mentionable=True)
+
     await skrrt_bot.delete_message(ctx.message)
     ghost = False
     if len(args) > 0:
@@ -321,6 +323,8 @@ async def everyone(ctx, *args):
     else:
         m = await skrrt_bot.say(e.mention)
         await skrrt_bot.delete_message(m)
+
+    skrrt_bot.edit_role(ctx.message.server, e, mentionable=False)
 
 token = None
 if len(sys.argv) >= 2 and sys.argv[1] == "l":

@@ -308,7 +308,11 @@ async def goon(ctx, *args):
 @skrrt_bot.command(pass_context=True)
 async def everyone(ctx, *args):
     e = discord.utils.get(ctx.message.server.roles, id="428709693540794395")
-    await skrrt_bot.say(e.mention)
+    await skrrt_bot.delete_message(ctx.message)
+    m = await skrrt_bot.say(e.mention)
+    if len(args) > 0:
+        if args[0] == "g":
+            await skrrt_bot.delete_message(m)
 
 
 token = None

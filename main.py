@@ -305,7 +305,7 @@ async def goon(ctx, *args):
         await skrrt_bot.say("EXCEPTION: " + str(e))
 
 
-@skrrt_bot.command(pass_context=True):
+@skrrt_bot.command(pass_context=True)
 async def everyone(ctx, *args):
     e = discord.utils.get(ctx.message.server.roles, id="428709693540794395")
     await skrrt_bot.say(e.mention)

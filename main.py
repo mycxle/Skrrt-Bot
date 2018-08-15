@@ -309,11 +309,18 @@ async def goon(ctx, *args):
 async def everyone(ctx, *args):
     e = discord.utils.get(ctx.message.server.roles, id="428709693540794395")
     await skrrt_bot.delete_message(ctx.message)
-    m = await skrrt_bot.say(e.mention)
+    ghost = False
     if len(args) > 0:
-        if args[0] == "g":
-            await skrrt_bot.delete_message(m)
+        if args[0].lower() == "g" or args[0].lower() == "ghost" or args[0].lower() == "ghostping":
+            ghost = True
 
+    if not ghost:
+        new_args = list(args[0:])
+        text = ' '.join(new_args)
+        await skrrt_bot.say(e.mention + " " + text)
+    else:
+        m = await skrrt_bot.say(e.mention)
+        await skrrt_bot.delete_message(m)
 
 token = None
 if len(sys.argv) >= 2 and sys.argv[1] == "l":

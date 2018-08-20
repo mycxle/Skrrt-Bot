@@ -307,6 +307,8 @@ async def goon(ctx, *args):
 
 @skrrt_bot.command(pass_context=True)
 async def everyone(ctx, *args):
+    if not is_admin(str(ctx.message.author.id)):
+            return
     e = discord.utils.get(ctx.message.server.roles, id="428709693540794395")
     await skrrt_bot.edit_role(ctx.message.server, e, mentionable=True)
 

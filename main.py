@@ -37,6 +37,9 @@ async def on_message(message):
                     except:
                         await bot.delete_message(message)
             secnd = True
+    elif str(message.channel.id) in sec.get("suggestions_channels"):
+        await bot.add_reaction(message, "👍")
+        await bot.add_reaction(message, "👎")
     else:
         await bot.process_commands(message)
 

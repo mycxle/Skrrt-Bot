@@ -23,6 +23,21 @@ class ServerPolls:
                         except:
                             pass
 
+    async def on_reaction_remove(self, reaction, user):
+        message = reaction.message
+        emoji = reaction.emoji
+
+        if message.content.startswith(">poll") and message.author.id == user.id:
+            if is_mod():
+                substr = message.content[6:]
+                theid = str(sec.get("polls_channel"))
+                async for m in self.bot.logs_from(message.server.get_channel(theid), limit=50):
+                    if m.content == substr:
+                        try:
+                            await self.bot.remove_reaction(m ,emoji, self.bot.user)
+                        except:
+                            pass
+
 
 def setup(bot):
     bot.add_cog(ServerPolls(bot))

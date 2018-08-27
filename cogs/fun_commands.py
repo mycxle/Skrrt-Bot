@@ -29,8 +29,8 @@ class FunCommands:
         elif choice == 2:
             await self.bot.add_reaction(ctx.message, '🍑')
 
-    @commands.command()
-    async def meme(self):
+    @commands.command(pass_context=True)
+    async def meme(self, ctx):
         """Posts random meme from r/dankmemes."""
         found = False
         n = random.randint(1, 91)

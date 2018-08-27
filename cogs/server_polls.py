@@ -18,7 +18,10 @@ class ServerPolls:
                 theid = str(sec.get("polls_channel"))
                 async for m in self.bot.logs_from(message.server.get_channel(theid), limit=50):
                     if m.content == substr:
-                        await self.bot.add_reaction(m ,emoji)
+                        try:
+                            await self.bot.add_reaction(m ,emoji)
+                        except:
+                            pass
 
 
 def setup(bot):

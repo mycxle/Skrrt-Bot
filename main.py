@@ -3,12 +3,16 @@
 import discord
 from discord.ext import commands
 from discord.ext.commands import Bot
+import random
+
+from timex import *
 
 from globals import *
 
 bot = Bot(command_prefix=">")
 
 extensions = ["admin_commands", "mod_commands", "info_commands", "fun_commands", "member_join", "member_leave", "server_polls"]
+moneycooldowns = []
 
 @bot.event
 async def on_ready():
@@ -22,8 +26,31 @@ async def on_command_error(error, ctx):
     else:
         await bot.say("Failure Encountered: " + str(error))
 
+def get_money():
+    return round(random.uniform(0.1,1), 2)
+
+def remove_money_cooldown(id):
+    global moneycooldowns
+    moneycooldowns.remove(id)
+
 @bot.event
 async def on_message(message):
+    if str(message.channel.id) not in sec.get("nomoney_channels"):
+        if str(message.author.id) not in moneycooldowns:
+            money = get_money()
+            print("Got: " + str(money))
+            user_dict = db.child("money").child(str(message.author.id)).get().val()
+            if user_dict is None:
+                db.child("money").child(str(message.author.id)).set({"balance": str(money), "last_daily": "..."})
+            else:
+                balance = float(user_dict["balance"])
+                balance += money
+                db.child("money").child(str(message.author.id)).set({"balance": str(round(balance, 2)), "last_daily": "..."})
+            moneycooldowns.append(str(message.author.id))
+            Timer(60, remove_money_cooldown, str(message.author.id))
+        else:
+            print("already in cooldowns")
+
     if str(message.channel.id) == str(sec.get("counting_channel")):
         secnd = False
         async for m in bot.logs_from(message.channel, limit=2):

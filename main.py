@@ -16,11 +16,15 @@ bot = Bot(command_prefix=bot_prefix)
 
 extensions = ["admin_commands", "mod_commands", "info_commands", "fun_commands", "member_join", "member_leave", "server_polls", "money_commands"]
 moneycooldowns = []
+all_emojis = []
 
 @bot.event
 async def on_ready():
     print("Bot logged in.")
     await bot.change_presence(game=discord.Game(name="with big goth tiddies"))
+
+    global all_emojis
+    all_emojis = list(bot.get_all_emojis())
 
 @bot.event
 async def on_command_error(error, ctx):
@@ -40,6 +44,13 @@ async def remove_money_cooldown(id):
 
 @bot.event
 async def on_message(message):
+    if str(message.channel.id) == str(sec.get("general_channel")):
+        num = random.randint(1, 101)
+        if num == 5:
+            global all_emojis
+            random_emoji = random.choice(all_emojis)
+            await bot.add_reaction(message, random_emoji)
+
     global bot_prefix
     if str(message.channel.id) not in sec.get("nomoney_channels"):
         if str(message.author.id) not in moneycooldowns and not str(message.content).startswith(bot_prefix) and message.author.bot is False:

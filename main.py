@@ -9,6 +9,8 @@ from timex import *
 
 from globals import *
 
+from datetime import datetime
+
 bot = Bot(command_prefix=">")
 
 extensions = ["admin_commands", "mod_commands", "info_commands", "fun_commands", "member_join", "member_leave", "server_polls", "money_commands"]
@@ -21,6 +23,7 @@ async def on_ready():
 
 @bot.event
 async def on_command_error(error, ctx):
+    print(str(error))
     if isinstance(error, commands.CheckFailure):
         await bot.say("CheckFailure Encountered: " + str(error))
     else:
@@ -41,11 +44,13 @@ async def on_message(message):
             print("Got: " + str(money))
             user_dict = db.child("money").child(str(message.author.id)).get().val()
             if user_dict is None:
+                now_time = datetime.now()
                 db.child("money").child(str(message.author.id)).set({"balance": str(money), "last_daily": "..."})
             else:
                 balance = float(user_dict["balance"])
                 balance += money
-                db.child("money").child(str(message.author.id)).set({"balance": str(round(balance, 2)), "last_daily": "..."})
+                last_daily = str(user_dict["last_daily"])
+                db.child("money").child(str(message.author.id)).set({"balance": str(round(balance, 2)), "last_daily": str(last_daily)})
             moneycooldowns.append(str(message.author.id))
             Timer(60, remove_money_cooldown, str(message.author.id))
         else:

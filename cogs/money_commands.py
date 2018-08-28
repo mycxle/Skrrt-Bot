@@ -9,12 +9,15 @@ from datetime import datetime
 from dateutil import parser
 from datetime import timedelta
 import math
+import asyncio
+from timex import Timer
 
 class MoneyCommands:
     """Money Commands"""
 
     def __init__(self, bot):
         self.bot = bot
+        self.mathcooldowns = []
 
     @commands.command(pass_context=True)
     async def balance(self, ctx):
@@ -95,6 +98,75 @@ class MoneyCommands:
             db.child("money").child(str(ctx.message.author.id)).set({"balance": str(round(balance, 2)), "last_daily": str(last_daily)})
         await self.bot.say(ctx.message.author.mention + " **grabbed ${}!**".format(str(round(Global.collectable, 2))))
         Global.collectable = None
+
+    @asyncio.coroutine
+    async def math_timeout(self, user):
+        id = str(user.id)
+        print("timeout")
+        if id in Global.maths:
+            del Global.maths[id]
+            await self.bot.send_message(user.server.get_channel(str(sec.settings["math_channel"])),
+                               str(user.mention + " `you took too long to answer!`"))
+
+    @asyncio.coroutine
+    async def math_cooldown(self, uid):
+        self.mathcooldowns.remove(uid)
+
+    @commands.command(pass_context=True)
+    async def math(self, ctx):
+        if str(ctx.message.channel.id) != str(sec.get("math_channel")):
+            return await self.bot.say("`this isn't the math channel!`")
+        else:
+            id = str(ctx.message.author.id)
+            if id in Global.maths:
+                return
+
+            if id in self.mathcooldowns:
+                await self.bot.say(ctx.message.author.mention + " `slow down math wizard!`")
+                return
+
+            operation = random.choice(["+", "-", "*", "/"])
+            num1 = random.randint(1, 12)
+            num2 = random.randint(1, 12)
+
+            if operation == "-":
+                if num2 > num1:
+                    tmp = num1
+                    num1 = num2
+                    num2 = tmp
+            elif operation == "/":
+                if num2 > num1:
+                    tmp = num1
+                    num1 = num2
+                    num2 = tmp
+                while True:
+                    if num1 % num2 == 0:
+                        break
+                    num2 = random.randint(1, 13)
+
+            txt = " `what is {} {} {}?`".format(num1, operation, num2)
+
+            if operation == "+":
+                answer = num1 + num2
+            elif operation == "-":
+                answer = num1 - num2
+            elif operation == "*":
+                answer = num1 * num2
+            elif operation == "/":
+                answer = num1 // num2
+
+            await self.bot.say(ctx.message.author.mention + txt)
+
+            print(str(answer))
+            print(str(id))
+            Global.maths[id] = answer
+            self.mathcooldowns.append(ctx.message.author.id)
+
+            print(str(Global.maths))
+            Timer(3, self.math_timeout, ctx.message.author)
+            Timer(3, self.math_cooldown, ctx.message.author.id)
+
+
 
 def setup(bot):
     bot.add_cog(MoneyCommands(bot))

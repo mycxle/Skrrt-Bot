@@ -37,6 +37,9 @@ async def on_command_error(error, ctx):
 def get_money():
     return round(random.uniform(0.1,1), 2)
 
+def get_math_money():
+    return round(random.uniform(0.05,0.3), 2)
+
 @asyncio.coroutine
 async def remove_money_cooldown(id):
     global moneycooldowns
@@ -45,6 +48,38 @@ async def remove_money_cooldown(id):
 @bot.event
 async def on_message(message):
     global bot_prefix
+
+    if str(message.channel.id) == str(sec.get("math_channel")) and not str(message.content).startswith(bot_prefix) and message.author.bot is False:
+        if str(message.author.id) in Global.maths:
+            try:
+                num = int(message.content)
+                ans = int(Global.maths.get(str(message.author.id)))
+
+                print(num)
+                print(ans)
+
+                if num is ans:
+                    print("YES")
+                    del Global.maths[str(message.author.id)]
+                    money = round(get_math_money(), 2)
+                    user_dict = db.child("money").child(str(message.author.id)).get().val()
+                    if user_dict is None:
+                        db.child("money").child(str(message.author.id)).set({"balance": str(money), "last_daily": "..."})
+                    else:
+                        balance = float(user_dict["balance"])
+                        balance += money
+                        last_daily = str(user_dict["last_daily"])
+                        db.child("money").child(str(message.author.id)).set({"balance": str(round(balance, 2)), "last_daily": str(last_daily)})
+                    txt = str(message.author.mention + " `that's correct! you earned ${:.2f}!`".format(money))
+                    print(txt)
+                    await bot.send_message(message.server.get_channel(str(sec.settings["math_channel"])), txt)
+                else:
+                    print("nigger")
+                    del Global.maths[str(message.author.id)]
+
+                    await bot.send_message(message.server.get_channel(str(sec.settings["math_channel"])), str(message.author.mention + " `that's incorrect!`"))
+            except Exception as e:
+                print(str(e))
 
     if str(message.channel.id) == str(sec.get("general_channel")) and not str(message.content).startswith(bot_prefix) and message.author.bot is False:
         num = random.randint(1, 201)

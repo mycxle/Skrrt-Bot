@@ -23,3 +23,4 @@ sec = Security(db)
 class Global:
     autobans = []
     collectable = None
+    maths = dict()

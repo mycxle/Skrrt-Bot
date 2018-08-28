@@ -174,8 +174,9 @@ class MoneyCommands:
         if "123" in all_users:
             del all_users["123"]
 
-        top10 = list(all_users.items())[:10]
+        top10 = list(all_users.items())
         top10.sort(key=lambda x: float(x[1]["balance"]), reverse=True)
+        top10 = top10[:10]
 
         string_list = []
         for entry in top10:

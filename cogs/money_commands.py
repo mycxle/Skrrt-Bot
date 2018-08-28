@@ -26,7 +26,7 @@ class MoneyCommands:
         await self.bot.say("`you have $" + str(money) + "`")
 
     def get_daily(self):
-        return round(random.uniform(10, 100), 2)
+        return round(random.uniform(50, 100), 2)
 
     @commands.command(pass_context=True)
     async def daily(self, ctx):

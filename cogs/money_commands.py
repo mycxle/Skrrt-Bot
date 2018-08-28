@@ -11,6 +11,7 @@ from datetime import timedelta
 import math
 import asyncio
 from timex import Timer
+import collections
 
 class MoneyCommands:
     """Money Commands"""
@@ -166,7 +167,40 @@ class MoneyCommands:
             Timer(3, self.math_timeout, ctx.message.author)
             Timer(3, self.math_cooldown, ctx.message.author.id)
 
+    @commands.command(pass_context=True)
+    async def leaderboard(self, ctx):
 
+        all_users = db.child("money").get().val()
+        if "123" in all_users:
+            del all_users["123"]
+
+        top10 = list(collections.OrderedDict(sorted(all_users.items(), key=lambda key_value_pair: key_value_pair[1]['balance'], reverse=True)).items())[:10]
+
+        string_list = []
+        for entry in top10:
+            try:
+                member = await self.bot.get_user_info(str(entry[0]))
+                string_list.append("{} - `${:.2f}`".format(member.mention, float(entry[1]["balance"])))
+            except Exception as e:
+                print(str(e))
+
+        e = discord.Embed()
+        e.colour=discord.Color.green()
+        e.title="🚨 LEADERBOARD 🚨"
+        e.set_thumbnail(url="https://cdn.shopify.com/s/files/1/1061/1924/files/Money_Face_Emoji.png")
+
+        final_string = ""
+        for i in range(len(string_list)):
+            newline = "\n"
+            if i == len(string_list) - 1: newline = ""
+            final_string += "**{}** - {}{}".format(i+1, string_list[i], newline)
+
+        e.description=final_string
+
+        try:
+            await self.bot.send_message(self.bot.get_channel(str(ctx.message.channel.id)), embed=e)
+        except Exception as e:
+            print(e)
 
 def setup(bot):
     bot.add_cog(MoneyCommands(bot))

@@ -20,7 +20,7 @@ class MoneyCommands:
         self.bot = bot
         self.mathcooldowns = []
 
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, aliases=['money', 'ss'])
     async def balance(self, ctx):
         the_user = str(ctx.message.author.id)
         if len(ctx.message.mentions) > 0:
@@ -167,7 +167,7 @@ class MoneyCommands:
             Timer(3, self.math_timeout, ctx.message.author)
             Timer(3, self.math_cooldown, ctx.message.author.id)
 
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, aliases=['top10'])
     async def leaderboard(self, ctx):
 
         all_users = db.child("money").get().val()
@@ -195,7 +195,7 @@ class MoneyCommands:
         for i in range(len(string_list)):
             newline = "\n"
             if i == len(string_list) - 1: newline = ""
-            final_string += "**{}** - {}{}".format(i+1, string_list[i], newline)
+            final_string += "**{:0>2}** - {}{}".format(i+1, string_list[i], newline)
 
         e.description=final_string
 

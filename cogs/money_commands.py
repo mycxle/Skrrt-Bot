@@ -174,7 +174,8 @@ class MoneyCommands:
         if "123" in all_users:
             del all_users["123"]
 
-        top10 = list(collections.OrderedDict(sorted(all_users.items(), key=lambda key_value_pair: key_value_pair[1]['balance'], reverse=True)).items())[:10]
+        top10 = list(all_users.items())[:10]
+        top10.sort(key=lambda x: float(x[1]["balance"]), reverse=True)
 
         string_list = []
         for entry in top10:

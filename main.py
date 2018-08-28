@@ -11,7 +11,8 @@ from globals import *
 
 from datetime import datetime
 
-bot = Bot(command_prefix=">")
+bot_prefix = ">"
+bot = Bot(command_prefix=bot_prefix)
 
 extensions = ["admin_commands", "mod_commands", "info_commands", "fun_commands", "member_join", "member_leave", "server_polls", "money_commands"]
 moneycooldowns = []
@@ -39,8 +40,9 @@ async def remove_money_cooldown(id):
 
 @bot.event
 async def on_message(message):
+    global bot_prefix
     if str(message.channel.id) not in sec.get("nomoney_channels"):
-        if str(message.author.id) not in moneycooldowns:
+        if str(message.author.id) not in moneycooldowns and not str(message.content).startswith(bot_prefix) and message.author.bot is False:
             money = get_money()
             print("Got: " + str(money))
             user_dict = db.child("money").child(str(message.author.id)).get().val()

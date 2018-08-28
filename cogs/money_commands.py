@@ -18,12 +18,22 @@ class MoneyCommands:
 
     @commands.command(pass_context=True)
     async def balance(self, ctx):
-        user_dict = db.child("money").child(str(ctx.message.author.id)).get().val()
-        money = round(float(user_dict["balance"]), 2)
+        the_user = str(ctx.message.author.id)
+        if len(ctx.message.mentions) > 0:
+            print("ok")
+            tmp = ctx.message.mentions[0]
+            print(str(tmp.id))
+            the_user = tmp.id
+        user_dict = db.child("money").child(the_user).get().val()
         if user_dict is None:
-            db.child("money").child(str(ctx.message.author.id)).set({"balance": "0", "last_daily": "..."})
+            db.child("money").child(the_user).set({"balance": "0", "last_daily": "..."})
             money = 0
-        await self.bot.say("`you have $" + str(money) + "`")
+        else:
+            money = round(float(user_dict["balance"]), 2)
+        if len(ctx.message.mentions) > 0:
+            await self.bot.say("`they have $" + str(money) + "!`")
+        else:
+            await self.bot.say("`you have $" + str(money) + "!`")
 
     def get_daily(self):
         return round(random.uniform(50, 100), 2)

@@ -81,5 +81,20 @@ class MoneyCommands:
                 db.child("money").child(str(ctx.message.author.id)).set({"balance": str(round(balance, 2)), "last_daily": str(now_time)})
                 await self.bot.say("`you earned ${}!`".format(str(round(money, 2))))
 
+    @commands.command(pass_context=True)
+    async def grab(self, ctx):
+        if Global.collectable is None: return
+
+        user_dict = db.child("money").child(str(ctx.message.author.id)).get().val()
+        if user_dict is None:
+            db.child("money").child(str(ctx.message.author.id)).set({"balance": str(Global.collectable), "last_daily": "..."})
+        else:
+            balance = float(user_dict["balance"])
+            balance += Global.collectable
+            last_daily = str(user_dict["last_daily"])
+            db.child("money").child(str(ctx.message.author.id)).set({"balance": str(round(balance, 2)), "last_daily": str(last_daily)})
+        await self.bot.say(ctx.message.author.mention + " **grabbed ${}!**".format(str(round(Global.collectable, 2))))
+        Global.collectable = None
+
 def setup(bot):
     bot.add_cog(MoneyCommands(bot))

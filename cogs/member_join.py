@@ -19,7 +19,7 @@ class MemberJoin:
         server_locked = int(sec.get("is_locked_server"))
 
         if server_locked == 1:
-            autobans.append(member.id)
+            Global.autobans.append(member.id)
             await self.bot.send_message(logs_channel,
                                    "LOCKED SERVER AUTO-BAN: " + member_name + " | " + str(member.id))
             return await self.bot.ban(member, delete_message_days=1)
@@ -34,7 +34,7 @@ class MemberJoin:
             seconds = seconds % 60
             print("Account is " + str(hours) + " old.")
             if hours < newaccounts_age:
-                autobans.append(member.id)
+                Global.autobans.append(member.id)
                 await self.bot.send_message(logs_channel,
                                        "NEW ACCOUNT AUTO-BANNED: " + member_name + " | " + str(member.id) + " | Age: "
                                        + str(hours) + "h " + str(minutes) + "m " + str(seconds) + "s")

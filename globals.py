@@ -20,4 +20,6 @@ else:
 
 sec = Security(db)
 
-autobans = []
+class Global:
+    autobans = []
+    collectable = None

@@ -10,9 +10,9 @@ class MemberLeave:
         self.bot = bot
 
     async def on_member_remove(self, member):
-        print(autobans)
-        if str(member.id) in autobans:
-            autobans.remove(str(member.id))
+        print(Global.autobans)
+        if str(member.id) in Global.autobans:
+            Global.autobans.remove(str(member.id))
             return
 
         welcome_channel = member.server.get_channel(str(sec.settings["welcome_channel"]))

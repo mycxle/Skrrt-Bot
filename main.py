@@ -44,14 +44,25 @@ async def remove_money_cooldown(id):
 
 @bot.event
 async def on_message(message):
-    if str(message.channel.id) == str(sec.get("general_channel")):
-        num = random.randint(1, 101)
-        if num == 5:
+    global bot_prefix
+
+    if str(message.channel.id) == str(sec.get("general_channel")) and not str(message.content).startswith(bot_prefix) and message.author.bot is False:
+        num = random.randint(1, 201)
+        if num == 5 or num == 7:
             global all_emojis
             random_emoji = random.choice(all_emojis)
+            print("> RANDOM EMOJI")
             await bot.add_reaction(message, random_emoji)
+        elif num == 6:
+            Global.collectable = random.choice([1, 5, 10, 20])
+            e = discord.Embed()
+            e.colour=discord.Color.green()
+            e.title="🚨 FREE MONEY 🚨"
+            e.description="A random ${} appeared!\nType `{}grab` to collect!".format(Global.collectable, bot_prefix)
+            e.set_thumbnail(url="https://cdn.shopify.com/s/files/1/1061/1924/files/Money_Face_Emoji.png")
+            print("> RANDOM MONEY")
+            await bot.send_message(message.channel, embed=e)
 
-    global bot_prefix
     if str(message.channel.id) not in sec.get("nomoney_channels"):
         if str(message.author.id) not in moneycooldowns and not str(message.content).startswith(bot_prefix) and message.author.bot is False:
             money = get_money()

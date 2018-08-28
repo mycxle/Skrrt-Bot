@@ -32,7 +32,8 @@ async def on_command_error(error, ctx):
 def get_money():
     return round(random.uniform(0.1,1), 2)
 
-def remove_money_cooldown(id):
+@asyncio.coroutine
+async def remove_money_cooldown(id):
     global moneycooldowns
     moneycooldowns.remove(id)
 

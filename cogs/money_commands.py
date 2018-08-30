@@ -36,9 +36,9 @@ class MoneyCommands:
         else:
             money = round(float(user_dict["balance"]), 2)
         if len(ctx.message.mentions) > 0:
-            await self.bot.say("`they have ${:.2f}!".format(str(money)))
+            await self.bot.say("`they have ${:.2f}!`".format(money))
         else:
-            await self.bot.say("`you have ${:.2f}!".format(str(money)))
+            await self.bot.say("`you have ${:.2f}!`".format(money))
 
     def get_daily(self):
         return round(random.uniform(50, 100), 2)
@@ -249,7 +249,7 @@ class MoneyCommands:
 
         Global.money.withdraw(ctx.message.author.id, amount)
         Global.money.deposit(togive.id, amount)
-        await self.bot.say("{} **you gave {} ${:.2f}!**".format(ctx.message.author.mention, togive.mention, amount))
+        await self.bot.say("{} **you gave ${:.2f} to {}!**".format(ctx.message.author.mention, amount, togive.mention))
 
 def setup(bot):
     bot.add_cog(MoneyCommands(bot))

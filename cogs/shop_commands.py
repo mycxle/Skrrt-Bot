@@ -44,7 +44,7 @@ class ShopCommands:
                 balance = round(float(user["balance"]), 2)
                 price = round(float(r[1]), 2)
                 if balance < price:
-                    return await self.bot.say("`you don't enough money!`")
+                    return await self.bot.say("`you don't have enough money!`")
 
                 my_roles = Global.db.child("inventory").child(ctx.message.author.id).child("roles").get().val()
                 if my_roles is None:

@@ -68,5 +68,40 @@ class ShopCommands:
 
         await self.bot.say("**you own the following roles: {}**".format(" ".join(mentions_list)))
 
+    @commands.command(pass_context=True)
+    async def role(self, ctx, role=None):
+        """Add/Remove a role from yourself."""
+        if role is None:
+            return await self.bot.say("`you didn't provide the role name!`")
+
+        my_roles = Global.db.child("inventory").child(ctx.message.author.id).child("roles").get().val()
+        if my_roles is None:
+            return await self.bot.say("`you don't own any roles!`")
+
+        my_roles_list = list(my_roles.keys())
+        roles = []
+        for r in my_roles_list:
+            the_role = discord.utils.get(ctx.message.server.roles, id=r)
+            roles.append(the_role)
+
+        role_name = role.lower()
+        found_role = None
+
+        for r in roles:
+            r_name = r.name.lower()
+            if role_name in r_name:
+                found_role = r
+
+        if found_role is None:
+            return await self.bot.say("`couldn't find that role in your inventory!`")
+
+        if found_role in ctx.message.author.roles:
+            await self.bot.remove_roles(ctx.message.author, found_role)
+            await self.bot.say("{} **removed {}!**".format(ctx.message.author.mention, found_role.mention))
+        else:
+            await self.bot.add_roles(ctx.message.author, found_role)
+            await self.bot.say("{} **added {}!**".format(ctx.message.author.mention, found_role.mention))
+
+
 def setup(bot):
     bot.add_cog(ShopCommands(bot))

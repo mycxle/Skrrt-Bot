@@ -183,6 +183,44 @@ class AdminCommands:
             await self.lock_unlock_channels(ctx, 0)
             await self.bot.say("WE ARE NOW FULLY UNLOCKED!")
 
+    @commands.command(pass_context=True)
+    @is_admin()
+    async def updateinventories(self, ctx, *role):
+        """Binds role to current users' inventories."""
+        the_role = None
+        if len(role) == 0:
+            return await self.bot.say("`please specify the role`")
+        if len(role) == 1:
+            test = discord.utils.get(ctx.message.server.roles, id=str(role[0]))
+            if test is not None:
+                the_role = test
+            else:
+                roles_list = ctx.message.server.roles
+                for r in roles_list:
+                    name = r.name.lower()
+                    if str(role[0]).lower() in name:
+                        the_role = r
+        else:
+            roles_list = ctx.message.server.roles
+            for r in roles_list:
+                name = r.name.lower()
+                if str(" ".join(role)).lower() in name:
+                    the_role = r
+
+        added_to = []
+        members = ctx.message.server.members
+        for m in members:
+            if the_role in m.roles:
+                my_roles = Global.db.child("inventory").child(m.id).child("roles").get().val()
+                if my_roles is None:
+                    Global.db.child("inventory").child(m.id).child("roles").set({str(the_role.id): str(the_role.id)})
+                else:
+                    Global.db.child("inventory").child(m.id).child("roles").update({str(the_role.id): str(the_role.id)})
+                added_to.append(str(m.name) + "#" + str(m.discriminator))
+
+        await self.bot.say("**added {} to the following inventories:** {}".format(the_role.mention, ", ".join(added_to)))
+
+
 
 def setup(bot):
     bot.add_cog(AdminCommands(bot))

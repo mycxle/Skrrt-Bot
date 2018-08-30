@@ -64,9 +64,17 @@ class ShopCommands:
     @commands.command(pass_context=True)
     async def inventory(self, ctx):
         """See what items you currently own."""
-        my_roles = Global.db.child("inventory").child(ctx.message.author.id).child("roles").get().val()
+        the_user = str(ctx.message.author.id)
+        if len(ctx.message.mentions) > 0:
+            print("ok")
+            tmp = ctx.message.mentions[0]
+            print(str(tmp.id))
+            the_user = tmp.id
+        my_roles = Global.db.child("inventory").child(the_user).child("roles").get().val()
         if my_roles is None:
-            return await self.bot.say("`your inventory is empty!`")
+            if len(ctx.message.mentions) > 0: await self.bot.say("`their inventory is empty!`")
+            else: await self.bot.say("`your inventory is empty!`")
+            return
 
         my_roles_list = list(my_roles.keys())
         mentions_list = []
@@ -74,7 +82,8 @@ class ShopCommands:
             role = discord.utils.get(ctx.message.server.roles, id=r)
             mentions_list.append(role.mention)
 
-        await self.bot.say("**you own the following roles: {}**".format(" ".join(mentions_list)))
+        if len(ctx.message.mentions) > 0: self.bot.say("**they own the following roles: {}**".format(" ".join(mentions_list)))
+        else: await self.bot.say("**you own the following roles: {}**".format(" ".join(mentions_list)))
 
     @commands.command(pass_context=True)
     async def role(self, ctx, role=None):

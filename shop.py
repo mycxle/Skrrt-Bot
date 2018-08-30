@@ -39,7 +39,7 @@ class Shop:
 
     def get_custom_roles_instructions_embed(self, crc):
         e = discord.Embed()
-        e.colour=discord.Color.green()
+        e.colour=discord.Colour(int(crc.color[1:], 16))
         e.title="Create this role for $3000?"
         webhexcolor = crc.color
         im = Image.new("RGB", (100,100), webhexcolor)

@@ -8,7 +8,7 @@ import sys
 import os
 
 bot = Bot(command_prefix=Global.bot_prefix)
-extensions = ["admin_commands", "mod_commands", "info_commands", "fun_commands", "member_join", "member_leave", "server_polls", "money_commands"]
+extensions = ["admin_commands", "mod_commands", "info_commands", "fun_commands", "member_join", "member_leave", "server_polls", "money_commands", "shop_commands"]
 chans = [MathChan(), GenChan(), CountChan(), SuggestChan(), MoneyChans()]
 
 

@@ -4,6 +4,7 @@ import pyrebase
 
 from security import Security
 from money import Money
+from shop import Shop
 
 class Global:
     autobans = []
@@ -27,3 +28,4 @@ class Global:
 
     security = Security(db)
     money = Money(db)
+    shop = Shop(db)

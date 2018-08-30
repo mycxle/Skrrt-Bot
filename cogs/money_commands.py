@@ -91,7 +91,6 @@ class MoneyCommands:
     async def grab(self, ctx):
         """Collects free money when it appears."""
         if Global.collectable is None: return
-        Global.collectable = None
 
         user_dict = Global.db.child("money").child(str(ctx.message.author.id)).get().val()
         if user_dict is None:
@@ -102,6 +101,7 @@ class MoneyCommands:
             last_daily = str(user_dict["last_daily"])
             Global.db.child("money").child(str(ctx.message.author.id)).set({"balance": str(round(balance, 2)), "last_daily": str(last_daily)})
         await self.bot.say(ctx.message.author.mention + " **grabbed ${}!**".format(str(round(Global.collectable, 2))))
+        Global.collectable = None
 
 
     @asyncio.coroutine

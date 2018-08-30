@@ -1,8 +1,14 @@
 import discord
+from PIL import Image
+import os
+import pyimgur
+
 
 class Shop:
     def __init__(self, db):
         self.db = db
+        IMGUR_ID = '36ef56be76e9093'
+        self.imgur = pyimgur.Imgur(IMGUR_ID)
 
     def get_roles(self):
         return list(self.db.child("shop").child("roles").get().val().items())
@@ -27,6 +33,26 @@ class Shop:
             final_str += "**{:0>2}** - {} - `{}`".format(i+1, mention, price)
             if r != roles[-1]: final_str += "\n"
 
-        e.description=final_str
+        e.description=final_str+"\nmake your own: `>buy role custom`"
         e.set_footer(text='use ">buy role {number}" to purchase!')
+        return e
+
+    def get_custom_roles_instructions_embed(self, crc):
+        e = discord.Embed()
+        e.colour=discord.Color.green()
+        e.title="Create this role for $3000?"
+        webhexcolor = crc.color
+        im = Image.new("RGB", (100,100), webhexcolor)
+        PATH = "color.png"
+        im.save( PATH)
+        uploaded_image = self.imgur.upload_image(PATH, title="Uploaded with PyImgur")
+        e.set_thumbnail(url=uploaded_image.link)
+        e.add_field(name="Role Name", value=crc.name)
+        e.add_field(name="Role Color", value=crc.color)
+        e.add_field(name="Purchasable", value=str(crc.purchasable))
+        if isinstance(crc.price, str):
+            e.add_field(name="Buy Price", value=crc.price)
+        else:
+            e.add_field(name="Buy Price", value="${:.2f}".format(crc.price))
+        e.set_footer(text="👍 to accept | 👎 to cancel")
         return e

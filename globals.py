@@ -10,6 +10,7 @@ class Global:
     autobans = []
     collectable = None
     all_emojis = []
+    role_creators = {}
     maths = dict()
     db = None
     bot_prefix = ">"

@@ -10,22 +10,27 @@ class ShopCommands:
 
     @commands.command(pass_context=True)
     async def shop(self, ctx, category=None):
+        """See what's for sale in the shop."""
         if category is None:
-            pass
-        elif category == "role" or category == "roles":
+            category = "role"
+        if category == "role" or category == "roles":
             e = Global.shop.get_roles_embed(ctx)
             await self.bot.say(embed=e)
 
     @commands.command(pass_context=True)
     async def buy(self, ctx, *args):
+        """Buy an item from the shop."""
         if len(args) != 2:
-            return
+            return await self.bot.say("`provide shop category and item number!`")
 
         category = args[0]
         option = args[1]
 
         if category == "role" or category == "roles":
-            r = Global.shop.get_role(int(option)-1)
+            try:
+                r = Global.shop.get_role(int(option)-1)
+            except:
+                return await self.bot.say("`invalid item number!`")
             role = discord.utils.get(ctx.message.server.roles, id=r[0])
             user = Global.money.get_user(ctx.message.author.id)
             balance = round(float(user["balance"]), 2)
@@ -47,6 +52,21 @@ class ShopCommands:
 
             await self.bot.add_roles(ctx.message.author, role)
             return await self.bot.say("{} **you just bought {} for ${:.2f}!**".format(ctx.message.author.mention, role.mention, price))
+
+    @commands.command(pass_context=True)
+    async def inventory(self, ctx):
+        """See what items you currently own."""
+        my_roles = Global.db.child("inventory").child(ctx.message.author.id).child("roles").get().val()
+        if my_roles is None:
+            return await self.bot.say("`your inventory is empty!`")
+
+        my_roles_list = list(my_roles.keys())
+        mentions_list = []
+        for r in my_roles_list:
+            role = discord.utils.get(ctx.message.server.roles, id=r)
+            mentions_list.append(role.mention)
+
+        await self.bot.say("**you own the following roles: {}**".format(" ".join(mentions_list)))
 
 def setup(bot):
     bot.add_cog(ShopCommands(bot))

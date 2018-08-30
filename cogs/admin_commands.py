@@ -220,6 +220,16 @@ class AdminCommands:
 
         await self.bot.say("**added {} to the following inventories:** {}".format(the_role.mention, ", ".join(added_to)))
 
+    @commands.command(pass_context=True)
+    @is_admin()
+    async def removelevels(self, ctx):
+        """Removes all level roles."""
+        level_roles = Global.security.get("auto_level_roles")
+        for r_id in level_roles:
+            role = discord.utils.get(ctx.message.server.roles, id=str(r_id))
+            if role in ctx.message.author.roles:
+                await self.bot.remove_roles(ctx.message.author, role)
+        await self.bot.say("`removed all levels roles!`")
 
 
 def setup(bot):

@@ -72,8 +72,9 @@ async def on_reaction_add(reaction, user):
                 balance = round(float(u["balance"]), 2)
                 price = 3000
                 if balance < price:
-                    await bot.send_message(message.channel, "`you don't enough money!`")
                     del Global.role_creators[user.id]
+                    await bot.send_message(message.channel, "`you don't enough money!`")
+                    return
 
                 everyone_role = discord.utils.get(message.server.roles, is_everyone=True)
                 r = await bot.create_role(server=message.server, name=crc.name, colour=discord.Colour(int(crc.color[1:], 16)),

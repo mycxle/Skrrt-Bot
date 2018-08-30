@@ -89,11 +89,20 @@ async def on_reaction_add(reaction, user):
                 Global.money.withdraw(user.id, price)
                 Global.money.deposit(bot.user.id, price)
 
+                shop_role = discord.utils.get(message.server.roles, id=str(Global.security.get("roles_shop_id")))
+                exclusive_role = discord.utils.get(message.server.roles, id=str(Global.security.get("roles_exclusive_id")))
+
+                shop_pos = shop_role.position
+                exclusive_pos = exclusive_role.position
+
                 await bot.add_roles(user, r)
                 await bot.send_message(message.channel, "{} **you just created {} for ${:.2f}!**".format(user.mention, r.mention, price))
 
                 if crc.purchasable is True:
                     Global.db.child("shop").child("roles").update({str(r.id): str(crc.price)})
+                    await bot.move_role(server=message.server, role=r, position=shop_pos-1)
+                else:
+                    await bot.move_role(server=message.server, role=r, position=exclusive_pos-1)
 
                 del Global.role_creators[user.id]
 

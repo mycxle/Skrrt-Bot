@@ -26,6 +26,8 @@ class Security:
 			"everyone_role": helpers.db_get(db, self.root+"/everyone_role"),
 			"goon_role": helpers.db_get(db, self.root+"/goon_role"),
 			"mod_role": helpers.db_get(db, self.root+"/mod_role"),
+            "roles_shop_id": helpers.db_get(db, self.root+"/roles_shop_id"),
+            "roles_exclusive_id": helpers.db_get(db, self.root+"/roles_exclusive_id"),
             "counting_channel": helpers.db_get(db, self.root+"/counting_channel")
         }
         self.restrictions = {
@@ -45,6 +47,8 @@ class Security:
 			"everyone_role": [helpers.is_pos, "Positive integer"],
 			"goon_role": [helpers.is_pos, "Positive integer"],
 			"mod_role": [helpers.is_pos, "Positive integer"],
+            "roles_shop_id": [helpers.is_pos, "Positive integer"],
+            "roles_exclusive_id": [helpers.is_pos, "Positive integer"],
             "counting_channel": [helpers.is_pos, "Positive integer"]
         }
 

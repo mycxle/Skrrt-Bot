@@ -10,13 +10,13 @@ class MemberJoin:
         self.bot = bot
 
     async def on_member_join(self, member):
-        welcome_channel = member.server.get_channel(str(sec.settings["welcome_channel"]))
-        rules_channel = member.server.get_channel(str(sec.settings["rules_channel"]))
-        logs_channel = member.server.get_channel(str(sec.settings["logs_channel"]))
+        welcome_channel = member.server.get_channel(Global.security.get("welcome_channel"))
+        rules_channel = member.server.get_channel(Global.security.get("rules_channel"))
+        logs_channel = member.server.get_channel(Global.security.get("logs_channel"))
 
         member_name = member.name
-        newaccounts_age = int(sec.get("newaccounts_age")) * 24
-        server_locked = int(sec.get("is_locked_server"))
+        newaccounts_age = int(Global.security.get("newaccounts_age")) * 24
+        server_locked = int(Global.security.get("is_locked_server"))
 
         if server_locked == 1:
             Global.autobans.append(member.id)

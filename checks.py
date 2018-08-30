@@ -12,6 +12,6 @@ def is_admin():
 
 def is_mod():
     def predicate(ctx):
-        mod_role = discord.utils.get(ctx.message.server.roles, id=str(sec.get("mod_role")))
+        mod_role = discord.utils.get(ctx.message.server.roles, id=str(Global.security.get("mod_role")))
         return admins.get(ctx.message.author.id, False) or mod_role in ctx.message.author.roles
     return commands.check(predicate)

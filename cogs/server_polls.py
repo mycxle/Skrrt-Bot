@@ -15,7 +15,7 @@ class ServerPolls:
         if message.content.startswith(">poll") and message.author.id == user.id:
             if is_mod():
                 substr = message.content[6:]
-                theid = str(sec.get("polls_channel"))
+                theid = str(Global.security.get("polls_channel"))
                 async for m in self.bot.logs_from(message.server.get_channel(theid), limit=50):
                     if m.content == substr:
                         try:
@@ -30,7 +30,7 @@ class ServerPolls:
         if message.content.startswith(">poll") and message.author.id == user.id:
             if is_mod():
                 substr = message.content[6:]
-                theid = str(sec.get("polls_channel"))
+                theid = str(Global.security.get("polls_channel"))
                 async for m in self.bot.logs_from(message.server.get_channel(theid), limit=50):
                     if m.content == substr:
                         try:

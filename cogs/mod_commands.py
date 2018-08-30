@@ -12,7 +12,7 @@ class ModCommands:
     async def goon(self, ctx, user=None):
         """Adds/Removes the goon role from user."""
         try:
-            goon_role = discord.utils.get(ctx.message.server.roles, id=str(sec.get("goon_role")))
+            goon_role = discord.utils.get(ctx.message.server.roles, id=str(Global.security.get("goon_role")))
             m = None
             try:
                 m = ctx.message.mentions[0]
@@ -196,7 +196,7 @@ class ModCommands:
     @is_mod()
     async def poll(self, ctx, *text):
         """Creates a server poll."""
-        polls_channel = ctx.message.server.get_channel(str(sec.get("polls_channel")))
+        polls_channel = ctx.message.server.get_channel(str(Global.security.get("polls_channel")))
 
         if len(text) > 0:
             msg = " ".join(text)

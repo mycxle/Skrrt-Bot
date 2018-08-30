@@ -1,8 +1,8 @@
-import pyrebase
 import numbers
 from datetime import datetime
 import time
 import discord
+
 
 def db_get(db, s, is_list=False, get_items=False):
     nodes = s.split("/")
@@ -18,7 +18,8 @@ def db_get(db, s, is_list=False, get_items=False):
             l = list(n.get().val().values())
             l.remove("123")
             return(l)
-    return(int(n.get().val()))
+    return str(int(n.get().val())) # added the str() wrap
+
 
 def db_set(db, s, val):
     nodes = s.split("/")
@@ -29,6 +30,7 @@ def db_set(db, s, val):
     n.update({nodes[-1]:str(val)})
     return val
 
+
 def db_add(db, s, val):
     nodes = s.split("/")
     n = db.child(nodes[0])
@@ -36,6 +38,7 @@ def db_add(db, s, val):
         n = n.child(nodes[i])
     n.push(str(val))
     return str(val)
+
 
 def db_remove(db, s, lst, index):
     val = lst[index]
@@ -55,11 +58,13 @@ def db_remove(db, s, lst, index):
 
     return val
 
+
 def is_bool(val):
     if int(val) in {0, 1}:
         return True
     else:
         return False
+
 
 def is_pos(val):
     if int(val) > 0:
@@ -67,8 +72,10 @@ def is_pos(val):
     else:
         return False
 
+
 def is_int(val):
     return isinstance(val, numbers.Integral)
+
 
 def datetime_from_utc_to_local(utc_datetime):
     now_timestamp = time.time()

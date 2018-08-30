@@ -15,7 +15,7 @@ class MemberLeave:
             Global.autobans.remove(str(member.id))
             return
 
-        welcome_channel = member.server.get_channel(str(sec.settings["welcome_channel"]))
+        welcome_channel = member.server.get_channel(Global.security.get("welcome_channel"))
         print("MEMBER LEFT")
         e = discord.Embed()
         e.title = "Goodbye " + member.name + "!"

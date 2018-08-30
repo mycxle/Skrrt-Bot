@@ -82,7 +82,7 @@ class ShopCommands:
             role = discord.utils.get(ctx.message.server.roles, id=r)
             mentions_list.append(role.mention)
 
-        if len(ctx.message.mentions) > 0: self.bot.say("**they own the following roles: {}**".format(" ".join(mentions_list)))
+        if len(ctx.message.mentions) > 0: await self.bot.say("**they own the following roles: {}**".format(" ".join(mentions_list)))
         else: await self.bot.say("**you own the following roles: {}**".format(" ".join(mentions_list)))
 
     @commands.command(pass_context=True)

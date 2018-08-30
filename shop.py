@@ -25,7 +25,7 @@ class Shop:
             mention = role.mention
             price = "${:.2f}".format(round(float(r[1]), 2))
             final_str += "**{:0>2}** - {} - `{}`".format(i+1, mention, price)
-            if r != roles[-1]: str += "\n"
+            if r != roles[-1]: final_str += "\n"
 
         e.description=final_str
         e.set_footer(text='use ">buy role {number}" to purchase!')

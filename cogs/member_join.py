@@ -24,7 +24,7 @@ class MemberJoin:
                                    "LOCKED SERVER AUTO-BAN: " + member_name + " | " + str(member.id))
             return await self.bot.ban(member, delete_message_days=1)
 
-        if newaccounts_age > 0:
+        if newaccounts_age > 0 and member.id not in Global.security.get("whitelist_ids"):
             created = helpers.datetime_from_utc_to_local(member.created_at)
             current = datetime.now()
             diff = current - created

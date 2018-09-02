@@ -225,10 +225,12 @@ class AdminCommands:
     async def removelevels(self, ctx):
         """Removes all level roles."""
         level_roles = Global.security.get("auto_level_roles")
+        roles = []
         for r_id in level_roles:
             role = discord.utils.get(ctx.message.server.roles, id=str(r_id))
             if role in ctx.message.author.roles:
-                await self.bot.remove_roles(ctx.message.author, role)
+                roles.append(role)
+        await self.bot.remove_roles(ctx.message.author, *roles)
         await self.bot.say("`removed all levels roles!`")
 
 

@@ -18,6 +18,12 @@ async def on_ready():
     await bot.change_presence(game=discord.Game(name="with big goth tiddies"))
     Global.all_emojis = list(bot.get_all_emojis())
 
+@bot.event
+async def on_member_ban(member):
+    me = await bot.get_user_info("167797932156911616")
+    if member.bot is True:
+        await bot.send_message(me, "**CODE RED: {} was banned!!**".format(member.name + "#" + member.discriminator))
+
 #
 # @bot.event
 # async def on_command_error(error, ctx):
@@ -26,6 +32,8 @@ async def on_ready():
 #         await bot.say("CheckFailure Encountered: " + str(error))
 #     else:
 #         await bot.say("Failure Encountered: " + str(error))
+
+
 
 
 @bot.event

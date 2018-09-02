@@ -49,10 +49,11 @@ class CustomRoleCreator:
     def get_response(self, message):
         msg_content = message
 
-        if msg_content == "cancel":
+        if msg_content.lower() == "cancel":
             return 0
 
         if self.counter == 0:
+            msg_content = msg_content.lower()
             if msg_content == "no":
                 return 0
             elif msg_content == "yes":
@@ -64,6 +65,7 @@ class CustomRoleCreator:
                     return 0
                 return "Invalid response. Try again."
         elif self.counter == 1:
+            msg_content = msg_content.lower()
             if msg_content == "no":
                 return 0
             elif msg_content == "yes":
@@ -98,6 +100,7 @@ class CustomRoleCreator:
                     return 0
                 return "Invalid response. Try again."
         elif self.counter == 4:
+            msg_content = msg_content.lower()
             if msg_content == "no":
                 self.purchasable = False
                 self.price = "N/A"

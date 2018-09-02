@@ -30,12 +30,12 @@ class FunCommands:
             await self.bot.add_reaction(ctx.message, '🍑')
 
     @commands.command(pass_context=True)
-    async def meme(self, ctx):
+    async def meme(self, ctx, subreddit="dankmemes"):
         """Posts random meme from r/dankmemes."""
         found = False
-        n = random.randint(1, 91)
+        n = random.randint(1, 41)
         count = 0
-        for submission in self.reddit.subreddit('dankmemes').hot(limit=100):
+        for submission in self.reddit.subreddit(subreddit).hot(limit=50):
             count += 1
             if count == n:
                 found = True
@@ -49,6 +49,16 @@ class FunCommands:
                     e.set_footer(text="made by " + str(submission.author.name))
                     await self.bot.say(embed=e)
                     break
+
+    @commands.command(pass_context=True)
+    async def loungediscord(self, ctx, subreddit="dankmemes"):
+        """Posts random image from r/loungediscord."""
+        await ctx.invoke(self.meme, "loungediscord")
+
+    @commands.command(pass_context=True)
+    async def loungememes(self, ctx, subreddit="loungememes"):
+        """Posts random meme from r/loungememes."""
+        await ctx.invoke(self.meme, "loungememes")
 
 def setup(bot):
     bot.add_cog(FunCommands(bot))

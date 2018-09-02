@@ -11,6 +11,7 @@ skrrt_bot.add_cog(skrrt_cog)
 loop.create_task(skrrt_bot.start(skrrt_cog.token))
 
 zkrrt_bot = commands.Bot(command_prefix=Global.bot_prefix)
+zkrrt_bot.remove_command('help')
 zkrrt_cog = Zkrrt(zkrrt_bot)
 zkrrt_bot.add_cog(zkrrt_cog)
 loop.create_task(zkrrt_bot.start(zkrrt_cog.token))

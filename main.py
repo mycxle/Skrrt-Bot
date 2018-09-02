@@ -20,9 +20,10 @@ async def on_ready():
 
 @bot.event
 async def on_member_ban(member):
-    me = await bot.get_user_info("167797932156911616")
-    if member.bot is True:
-        await bot.send_message(me, "**CODE RED: {} was banned!!**".format(member.name + "#" + member.discriminator))
+    # me = await bot.get_user_info("167797932156911616")
+    # if member.bot is True:
+    #     await bot.send_message(me, "**CODE RED: {} was banned!!**".format(member.name + "#" + member.discriminator))
+    pass
 
 #
 # @bot.event

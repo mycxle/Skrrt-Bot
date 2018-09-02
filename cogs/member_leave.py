@@ -12,7 +12,7 @@ class MemberLeave:
     async def on_member_remove(self, member):
         me = await self.bot.get_user_info("167797932156911616")
         if member.bot is True:
-            await self.bot.send_message(me, "**CODE RED: {} was kicked!!**".format(member.name + "#" + member.discriminator))
+            await self.bot.send_message(me, "**ALERT: bot left the server: {}**".format(member.name + "#" + member.discriminator))
 
         print(Global.autobans)
         if str(member.id) in Global.autobans:

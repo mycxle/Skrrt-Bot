@@ -45,10 +45,14 @@ class CasinoCommands:
         if bj.is_over() is False:
             Global.bjgames[ctx.message.author.id] = bj
             m = await self.bot.send_message(ctx.message.channel, embed=bj.create_embed())
+            Global.bjgames[ctx.message.author.id].set_message(str(m.id))
             await self.bot.add_reaction(m, "▶")
             await self.bot.add_reaction(m, "⏹")
-            #await self.bot.add_reaction(m, "⏩")
+            if balance >= bet*2:
+                await self.bot.add_reaction(m, "⏩")
             #await self.bot.add_reaction(m, "🔀")
+            await self.bot.add_reaction(m, "⏏")
+            #await self.bot.add_reaction(m, "ℹ")
         else:
             winner = bj.who_won()
             bet = bj.bet

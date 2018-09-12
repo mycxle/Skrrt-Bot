@@ -111,7 +111,7 @@ class Skrrt:
                     del Global.role_creators[user.id]
 
         # ===== BLACKJACK =====
-        if user.id in Global.bjgames:
+        if user.id in Global.bjgames and Global.bjgames[user.id].msg == message.id:
             bjgame = Global.bjgames[user.id]
             if emoji == "▶":
                 bust = bjgame.hit()
@@ -122,8 +122,24 @@ class Skrrt:
                     bjgame.done()
             elif emoji == "⏹":
                 bjgame.done()
+            elif emoji == "⏏" and bjgame.firstTurnDone is False:
+                bjgame.surrender()
+            elif emoji == "⏩" and bjgame.firstTurnDone is False:
+                bjgame.double()
 
             await self.bot.remove_reaction(message, emoji, user)
+
+            # if bjgame.firstTurnDone is True:
+            #     print("asdfasdf")
+            #     try:
+            #         await self.bot.remove_reaction(message, "⏩", message.author)
+            #     except:
+            #         pass
+            #     try:
+            #         await self.bot.remove_reaction(message, "⏏", message.author)
+            #     except:
+            #         pass
+
             if bjgame.is_over():
                 new_embed = bjgame.create_embed(winEmbed=True)
                 await self.bot.edit_message(message, embed=new_embed)
@@ -131,6 +147,8 @@ class Skrrt:
 
                 winner = bjgame.who_won()
                 bet = bjgame.bet
+                if bjgame.surrendered is True:
+                    bet /= 2
 
                 u = Global.money.get_user(str(bjgame.user.id))
                 balance = round(float(u["balance"]), 2)

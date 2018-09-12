@@ -81,7 +81,27 @@ class BlackJack:
             self.dDone = True
             self.pDone = True
 
+        self.firstTurnDone = False
+        self.surrendered = False
+        self.doubled = False
+
+    def surrender(self):
+        self.surrendered = True
+        self.pDone = True
+        self.dDone = True
+
+    def double(self):
+        self.doubled = True
+        self.hit()
+        self.pDone = True
+        self.bet *= 2
+        self.done()
+
+    def set_message(self, msg):
+        self.msg = msg
+
     def hit(self):
+        self.firstTurnDone = True
         if not self.pDone:
             self.p.addCard(self.deck.dealNextCard())
             print(str(self.p.getHandvalue()))
@@ -102,9 +122,18 @@ class BlackJack:
                 if self.p.getHandvalue() == 21 and len(self.p.hand) == 2:
                     the_bet *= 2
                 e.set_author(name="{}#{} - YOU WON! [+${:.2f}]".format(self.user.name, self.user.discriminator, the_bet), icon_url=self.user.avatar_url)
-            else:
-                e.set_author(name="{}#{} - YOU LOST! [-${:.2f}]".format(self.user.name, self.user.discriminator, self.bet), icon_url=self.user.avatar_url)
+            elif winner == 1:
+                loseMsg = "YOU LOST!"
+                theBet = self.bet
+                if self.surrendered is True:
+                    loseMsg = "SURRENDERED!"
+                    theBet /= 2.0
+                e.set_author(name="{}#{} - {} [-${:.2f}]".format(self.user.name, self.user.discriminator, loseMsg, theBet), icon_url=self.user.avatar_url)
                 e.colour=discord.Color.red()
+            else:
+                loseMsg = "STANDOFF!"
+                e.set_author(name="{}#{} - {} [$0.00]".format(self.user.name, self.user.discriminator, loseMsg), icon_url=self.user.avatar_url)
+                e.colour=discord.Color.purple()
 
         pValue = str(self.p.getHandvalue()) + " `"
         if winEmbed is False:
@@ -171,11 +200,13 @@ class BlackJack:
 
         e.add_field(name="**Your Hand:**", value=" ".join(pEmojis)+"\n"+pdValue+pValue)
         e.add_field(name="**Dealer Hand:**", value=" ".join(dEmojis)+"\n"+ddValue+dValue)
-        e.set_footer(text="▶️ = hit ⏹ = stand ⏩ = double down 🔀 = split")
+        #e.description="**Dealer has an Ace. __Buy Insurance?__** - ℹ️"
+        e.set_footer(text="▶️ = hit ⏹ = stand ⏩ = double ⏏️ = surrender")
         self.e = e
         return self.e
 
     def done(self):
+        self.firstTurnDone = True
         self.pDone = True
         while self.dDone is False:
             self.dealer_turn()
@@ -185,7 +216,7 @@ class BlackJack:
             if self.p.getHandvalue() > 21:
                 self.dDone = True
                 return
-            if self.d.getHandvalue() < 17:
+            if self.d.getHandvalue() < self.p.getHandvalue() or (self.d.getHandvalue() == self.p.getHandvalue() and self.d.getHandvalue() < 17):
                 self.d.addCard(self.deck.dealNextCard())
                 self.dbust = self.d.getHandvalue() > 21
             else:
@@ -196,9 +227,13 @@ class BlackJack:
         return self.pDone and self.dDone
 
     def who_won(self):
+        if self.surrendered:
+            return 1
         if self.p.getHandvalue() > 21:
             return 1
         if self.p.getHandvalue() > self.d.getHandvalue() and self.p.getHandvalue() <= 21 or self.d.getHandvalue() > 21:
             return 0
+        elif self.p.getHandvalue() == self.d.getHandvalue():
+            return 2
         else:
             return 1

@@ -235,8 +235,11 @@ class AdminCommands:
 
     @commands.command(pass_context=True)
     @is_admin()
-    async def withdraw(self, ctx, amount):
+    async def withdraw(self, ctx, amount=None):
         """Withdraws money from the server bank."""
+
+        if amount is None:
+            return await self.bot.say("`please provide an amount!`")
 
         try:
             amount = round(float(amount), 2)

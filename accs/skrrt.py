@@ -10,7 +10,7 @@ import os
 class Skrrt:
     def __init__(self, bot):
         self.bot = bot
-        self.extensions = ["admin_commands", "mod_commands", "info_commands", "fun_commands", "member_join", "member_leave", "server_polls", "money_commands", "shop_commands"]
+        self.extensions = ["admin_commands", "mod_commands", "info_commands", "fun_commands", "member_join", "member_leave", "server_polls", "money_commands", "shop_commands", "casino_commands"]
         self.chans = [MathChan(), GenChan(), CountChan(), SuggestChan(), MoneyChans()]
         self.token = None
         if len(sys.argv) >= 2 and sys.argv[1] == "l":
@@ -109,3 +109,64 @@ class Skrrt:
                 elif emoji == "👎":
                     await self.bot.send_message(message.channel, user.mention + " " + "**Custom role canceled!**")
                     del Global.role_creators[user.id]
+
+        # ===== BLACKJACK =====
+        if user.id in Global.bjgames:
+            bjgame = Global.bjgames[user.id]
+            if emoji == "▶":
+                bust = bjgame.hit()
+                if bust is False:
+                    new_embed = bjgame.create_embed()
+                    await self.bot.edit_message(message, embed=new_embed)
+                else:
+                    bjgame.done()
+            elif emoji == "⏹":
+                bjgame.done()
+
+            await self.bot.remove_reaction(message, emoji, user)
+            if bjgame.is_over():
+                new_embed = bjgame.create_embed(winEmbed=True)
+                await self.bot.edit_message(message, embed=new_embed)
+                await self.bot.clear_reactions(message)
+
+                winner = bjgame.who_won()
+                bet = bjgame.bet
+
+                u = Global.money.get_user(str(bjgame.user.id))
+                balance = round(float(u["balance"]), 2)
+
+                if winner == 1:
+                    if bet > balance:
+                        Global.money.withdraw(str(bjgame.user.id), balance)
+                        Global.money.deposit(self.bot.user.id, balance)
+                    else:
+                        Global.money.withdraw(str(bjgame.user.id), bet)
+                        Global.money.deposit(self.bot.user.id, bet)
+                elif winner == 0:
+                    Global.money.withdraw(self.bot.user.id, bet)
+                    Global.money.deposit(str(bjgame.user.id), bet)
+
+
+                del Global.bjgames[user.id]
+
+
+    @commands.command(pass_context=True)
+    async def load(self, ctx, extension):
+        try:
+            self.bot.load_extension("cogs." + extension)
+            print("Loaded: {}".format(extension))
+        except Exception as e:
+            print("Error loading {}: {}".format(extension, str(e)))
+
+    @commands.command(pass_context=True)
+    async def unload(self, ctx, extension):
+        try:
+            self.bot.unload_extension("cogs." + extension)
+            print("Unloaded: {}".format(extension))
+        except Exception as e:
+            print("Error unloading {}: {}".format(extension, str(e)))
+
+    @commands.command(pass_context=True)
+    async def reload(self, ctx, extension):
+        await ctx.invoke(self.unload, extension)
+        await ctx.invoke(self.load, extension)

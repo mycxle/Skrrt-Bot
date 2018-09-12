@@ -11,6 +11,7 @@ class Global:
     collectable = None
     all_emojis = []
     role_creators = {}
+    bjgames = {}
     maths = dict()
     db = None
     bot_prefix = ">"

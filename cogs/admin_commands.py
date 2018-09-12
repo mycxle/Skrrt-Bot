@@ -233,6 +233,31 @@ class AdminCommands:
         await self.bot.remove_roles(ctx.message.author, *roles)
         await self.bot.say("`removed all levels roles!`")
 
+    @commands.command(pass_context=True)
+    @is_admin()
+    async def withdraw(self, ctx, amount):
+        """Withdraws money from the server bank."""
+
+        try:
+            amount = round(float(amount), 2)
+        except:
+            return await self.bot.say("`invalid amount!`")
+
+        if amount <= 0:
+            return await self.bot.say("`amount must be positive!`")
+
+        u = Global.money.get_user((self.bot.user.id))
+        balance = round(float(u["balance"]), 2)
+
+        if amount > balance:
+            return await self.bot.say("`the bank doesn't have that much!`")
+
+        Global.money.withdraw(self.bot.user.id, amount)
+        Global.money.deposit(ctx.message.author.id, amount)
+
+        await self.bot.say("`${:.2f} successfully withdrawn!`".format(amount))
+
+
 
 def setup(bot):
     bot.add_cog(AdminCommands(bot))

@@ -111,7 +111,7 @@ class Skrrt:
                     del Global.role_creators[user.id]
 
         # ===== BLACKJACK =====
-        if user.id in Global.bjgames and Global.bjgames[user.id].msg == message.id:
+        if user.id in Global.bjgames and Global.bjgames[user.id].msg.id == message.id:
             bjgame = Global.bjgames[user.id]
             if emoji == "▶":
                 bust = bjgame.hit()

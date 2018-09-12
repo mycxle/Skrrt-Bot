@@ -6,12 +6,49 @@ import os
 import discord
 from globals import Global
 from blackjack.blackjack import BlackJack
+from timex import Timer
+import asyncio
 
 class CasinoCommands:
     """Casino Commands"""
 
     def __init__(self, bot):
         self.bot = bot
+
+    @asyncio.coroutine
+    async def blackjack_timeout(self, user):
+        id = str(user.id)
+        if id in Global.bjgames:
+            bjgame = Global.bjgames[id]
+            bjgame.surrender()
+
+            new_embed = bjgame.create_embed(winEmbed=True)
+            await self.bot.edit_message(bjgame.msg, embed=new_embed)
+            await self.bot.clear_reactions(bjgame.msg)
+
+            winner = bjgame.who_won()
+            bet = bjgame.bet
+            if bjgame.surrendered is True:
+                bet /= 2
+
+            u = Global.money.get_user(str(bjgame.user.id))
+            balance = round(float(u["balance"]), 2)
+
+            if winner == 1:
+                if bet > balance:
+                    Global.money.withdraw(str(bjgame.user.id), balance)
+                    Global.money.deposit(self.bot.user.id, balance)
+                else:
+                    Global.money.withdraw(str(bjgame.user.id), bet)
+                    Global.money.deposit(self.bot.user.id, bet)
+            elif winner == 0:
+                Global.money.withdraw(self.bot.user.id, bet)
+                Global.money.deposit(str(bjgame.user.id), bet)
+
+            del Global.bjgames[id]
+
+            await self.bot.send_message(user.server.get_channel(str(Global.security.settings["casino_channel"])),
+                                        str(user.mention + " `you took too long!`"))
 
     @commands.command(pass_context=True)
     async def blackjack(self, ctx, bet=None):
@@ -45,7 +82,7 @@ class CasinoCommands:
         if bj.is_over() is False:
             Global.bjgames[ctx.message.author.id] = bj
             m = await self.bot.send_message(ctx.message.channel, embed=bj.create_embed())
-            Global.bjgames[ctx.message.author.id].set_message(str(m.id))
+            Global.bjgames[ctx.message.author.id].set_message(m)
             await self.bot.add_reaction(m, "▶")
             await self.bot.add_reaction(m, "⏹")
             if balance >= bet*2:
@@ -53,6 +90,8 @@ class CasinoCommands:
             #await self.bot.add_reaction(m, "🔀")
             await self.bot.add_reaction(m, "⏏")
             #await self.bot.add_reaction(m, "ℹ")
+
+            Timer(90, self.blackjack_timeout, ctx.message.author)
         else:
             winner = bj.who_won()
             bet = bj.bet

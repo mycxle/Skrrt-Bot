@@ -119,7 +119,7 @@ class BlackJack:
             if winner == 0:
                 e.colour=discord.Color.green()
                 the_bet = self.bet
-                if self.p.getHandvalue() == 21 and len(self.p.hand) == 2:
+                if self.p.getHandvalue() == 21 and self.firstTurnDone is False:
                     the_bet *= 2
                 e.set_author(name="{}#{} - YOU WON! [+${:.2f}]".format(self.user.name, self.user.discriminator, the_bet), icon_url=self.user.avatar_url)
             elif winner == 1:

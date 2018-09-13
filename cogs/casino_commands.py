@@ -95,7 +95,7 @@ class CasinoCommands:
             await self.bot.add_reaction(m, "⏏")
             #await self.bot.add_reaction(m, "ℹ")
 
-            Timer(10, self.blackjack_timeout, [ctx.message.author, m.id])
+            Timer(180, self.blackjack_timeout, [ctx.message.author, m.id])
         else:
             winner = bj.who_won()
             bet = bj.bet

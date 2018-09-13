@@ -16,10 +16,14 @@ class CasinoCommands:
         self.bot = bot
 
     @asyncio.coroutine
-    async def blackjack_timeout(self, user):
+    async def blackjack_timeout(self, args):
+        user = args[0]
+        mid = args[1]
         id = str(user.id)
         if id in Global.bjgames:
             bjgame = Global.bjgames[id]
+            if bjgame.msg.id != mid:
+                return
             bjgame.surrender()
 
             new_embed = bjgame.create_embed(winEmbed=True)
@@ -91,7 +95,7 @@ class CasinoCommands:
             await self.bot.add_reaction(m, "⏏")
             #await self.bot.add_reaction(m, "ℹ")
 
-            Timer(180, self.blackjack_timeout, ctx.message.author)
+            Timer(10, self.blackjack_timeout, [ctx.message.author, m.id])
         else:
             winner = bj.who_won()
             bet = bj.bet

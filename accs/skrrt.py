@@ -6,6 +6,7 @@ from chans import *
 import secrets
 import sys
 import os
+from checks import *
 
 class Skrrt:
     def __init__(self, bot):
@@ -169,7 +170,9 @@ class Skrrt:
 
 
     @commands.command(pass_context=True)
+    @is_admin()
     async def load(self, ctx, extension):
+        """Loads cog."""
         try:
             self.bot.load_extension("cogs." + extension)
             print("Loaded: {}".format(extension))
@@ -177,7 +180,9 @@ class Skrrt:
             print("Error loading {}: {}".format(extension, str(e)))
 
     @commands.command(pass_context=True)
+    @is_admin()
     async def unload(self, ctx, extension):
+        """Unloads cog."""
         try:
             self.bot.unload_extension("cogs." + extension)
             print("Unloaded: {}".format(extension))
@@ -185,6 +190,8 @@ class Skrrt:
             print("Error unloading {}: {}".format(extension, str(e)))
 
     @commands.command(pass_context=True)
+    @is_admin()
     async def reload(self, ctx, extension):
+        """Reloads cog."""
         await ctx.invoke(self.unload, extension)
         await ctx.invoke(self.load, extension)

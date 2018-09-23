@@ -204,5 +204,16 @@ class ModCommands:
         else:
             await self.bot.say("`no message provided!`")
 
+    @commands.command(pass_context=True)
+    @is_mod()
+    async def say(self, ctx, *text):
+        """Creates a server poll."""
+
+        if len(text) > 0:
+            msg = " ".join(text)
+            await self.bot.say(msg)
+        else:
+            await self.bot.say("`no message provided!`")
+
 def setup(bot):
     bot.add_cog(ModCommands(bot))

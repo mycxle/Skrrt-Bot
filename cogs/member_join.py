@@ -49,5 +49,7 @@ class MemberJoin:
         e.set_footer(text=str(member.id))
         await self.bot.send_message(welcome_channel, "**> MEMBER JOINED:** " + member.mention, embed=e)
 
+
+
 def setup(bot):
     bot.add_cog(MemberJoin(bot))

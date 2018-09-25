@@ -49,6 +49,13 @@ class MemberJoin:
         e.set_footer(text=str(member.id))
         await self.bot.send_message(welcome_channel, "**> MEMBER JOINED:** " + member.mention, embed=e)
 
+        level_roles = Global.security.get("join_roles")
+        roles = []
+        for r_id in level_roles:
+            role = discord.utils.get(member.server.roles, id=str(r_id))
+            roles.append(role)
+        await self.bot.add_roles(member, *roles)
+
 
 
 def setup(bot):

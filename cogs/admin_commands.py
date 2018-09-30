@@ -267,17 +267,20 @@ class AdminCommands:
 
         if num is None:
             return await self.bot.say("`please provide a number!`")
+            await self.bot.delete_message(ctx.message)
         else:
             try:
                 num = int(num)
             except:
                 return await self.bot.say("invalid number!`")
+                await self.bot.delete_message(ctx.message)
 
         try:
-            await self.bot.delete_message(ctx.message)
             deleted = await self.bot.purge_from(ctx.message.channel, limit=num, before=ctx.message)
+            await self.bot.delete_message(ctx.message)
         except Exception as e:
             await self.bot.say("EXCEPTION: " + str(e))
+            await self.bot.delete_message(ctx.message)
 
 
 def setup(bot):

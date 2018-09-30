@@ -210,11 +210,14 @@ class ModCommands:
     async def say(self, ctx, *text):
         """Make the bot say something."""
 
+
         if len(text) > 0:
             msg = " ".join(text)
             await self.bot.say(msg)
+            await self.bot.delete_message(ctx.message)
         else:
             await self.bot.say("`no message provided!`")
+            await self.bot.delete_message(ctx.message)
 
 def setup(bot):
     bot.add_cog(ModCommands(bot))

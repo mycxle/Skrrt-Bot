@@ -208,7 +208,7 @@ class ModCommands:
     @commands.command(pass_context=True)
     @is_mod()
     async def say(self, ctx, *text):
-        """Creates a server poll."""
+        """Make the bot say something."""
 
         if len(text) > 0:
             msg = " ".join(text)

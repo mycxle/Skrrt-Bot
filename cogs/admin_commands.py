@@ -260,6 +260,24 @@ class AdminCommands:
 
         await self.bot.say("`${:.2f} successfully withdrawn!`".format(amount))
 
+    @commands.command(pass_context=True)
+    @is_admin()
+    async def purge(self, ctx, num=None):
+        """Purges messages from a channel."""
+
+        if num is None:
+            return await self.bot.say("`please provide a number!`")
+        else:
+            try:
+                num = int(num)
+            except:
+                return await self.bot.say("invalid number!`")
+
+        try:
+            await self.bot.delete_message(ctx.message)
+            deleted = await self.bot.purge_from(ctx.message.channel, limit=num, before=ctx.message)
+        except Exception as e:
+            await self.bot.say("EXCEPTION: " + str(e))
 
 
 def setup(bot):

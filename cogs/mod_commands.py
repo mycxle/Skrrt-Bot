@@ -36,6 +36,7 @@ class ModCommands:
         except Exception as e:
             await self.bot.say("EXCEPTION: " + str(e))
 
+
     @commands.command(pass_context=True)
     @is_mod()
     async def kick(self, ctx, *user):

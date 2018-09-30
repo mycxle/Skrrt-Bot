@@ -15,3 +15,10 @@ def is_mod():
         mod_role = discord.utils.get(ctx.message.server.roles, id=str(Global.security.get("mod_role")))
         return admins.get(ctx.message.author.id, False) or mod_role in ctx.message.author.roles
     return commands.check(predicate)
+
+def is_brodgod():
+    def predicate(ctx):
+        brodgod_role = discord.utils.get(ctx.message.server.roles, id=str(Global.security.get("brodgod_role")))
+        mod_role = discord.utils.get(ctx.message.server.roles, id=str(Global.security.get("mod_role")))
+        return admins.get(ctx.message.author.id, False) or (brodgod_role in ctx.message.author.roles) or (mod_role in ctx.message.author.roles)
+    return commands.check(predicate)

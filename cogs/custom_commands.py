@@ -35,3 +35,6 @@ class CustomCommands:
                 await self.bot.say(str(m.name + " is now in bröd gang!"))
         except Exception as e:
             await self.bot.say("EXCEPTION: " + str(e))
+
+def setup(bot):
+    bot.add_cog(CustomCommands(bot))

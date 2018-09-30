@@ -10,7 +10,7 @@ class CustomCommands:
     @commands.command(pass_context=True, aliases=['bröd'])
     @is_brodgod()
     async def brod(self, ctx, user=None):
-        """Adds/Removes the goon role from user."""
+        """Adds/Removes the bröd role from user."""
         try:
             brod_role = discord.utils.get(ctx.message.server.roles, id=str(Global.security.get("brod_role")))
             m = None

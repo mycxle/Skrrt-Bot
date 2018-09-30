@@ -11,7 +11,7 @@ from checks import *
 class Skrrt:
     def __init__(self, bot):
         self.bot = bot
-        self.extensions = ["admin_commands", "mod_commands", "info_commands", "fun_commands", "member_join", "member_leave", "server_polls", "money_commands", "shop_commands", "casino_commands"]
+        self.extensions = ["admin_commands", "mod_commands", "info_commands", "fun_commands", "member_join", "member_leave", "server_polls", "money_commands", "shop_commands", "casino_commands", "custom_commands"]
         self.chans = [MathChan(), GenChan(), CountChan(), SuggestChan(), MoneyChans()]
         self.token = None
         if len(sys.argv) >= 2 and sys.argv[1] == "l":

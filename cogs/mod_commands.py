@@ -195,6 +195,19 @@ class ModCommands:
 
     @commands.command(pass_context=True)
     @is_mod()
+    async def removelevels(self, ctx):
+        """Removes all level roles."""
+        level_roles = Global.security.get("auto_level_roles")
+        roles = []
+        for r_id in level_roles:
+            role = discord.utils.get(ctx.message.server.roles, id=str(r_id))
+            if role in ctx.message.author.roles:
+                roles.append(role)
+        await self.bot.remove_roles(ctx.message.author, *roles)
+        await self.bot.say("`removed all levels roles!`")
+
+    @commands.command(pass_context=True)
+    @is_mod()
     async def poll(self, ctx, *text):
         """Creates a server poll."""
         polls_channel = ctx.message.server.get_channel(str(Global.security.get("polls_channel")))

@@ -16,6 +16,10 @@ zkrrt_cog = Zkrrt(zkrrt_bot)
 zkrrt_bot.add_cog(zkrrt_cog)
 loop.create_task(zkrrt_bot.start(zkrrt_cog.token))
 
+def my_handler(loop,context):
+    print("Caught this annoying unretrieved exception")
+loop.set_exception_handler(my_handler)
+
 try:
     loop.run_forever()
 finally:

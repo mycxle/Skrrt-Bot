@@ -35,6 +35,21 @@ class Skrrt:
         for c in self.chans:
             await c.on_message(self.bot, message)
 
+        if len(sys.argv) >= 2 and sys.argv[1] == "l":
+            pass
+        else:
+            voice_channel = discord.utils.get(message.server.channels, id='459913847806099456')
+            secret_chan = discord.utils.get(message.server.channels, id='470827844487086082')
+
+            members = voice_channel.voice_members
+            memids = []
+
+            for member in members:
+                memids.append(str(member.id))
+
+            if "497538479597682689" not in memids:
+                await self.bot.send_message(secret_chan, "☆play https://www.youtube.com/watch?v=bKZ0tFTRODM")
+
         if message.author.id in Global.role_creators and not message.content.startswith(Global.bot_prefix):
             entry = Global.role_creators[message.author.id]
             if message.channel.id == entry[0]:

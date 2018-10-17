@@ -15,6 +15,12 @@ class MemberJoin:
         logs_channel = member.server.get_channel(Global.security.get("logs_channel"))
 
         member_name = member.name
+
+        if "𝖙𝖔𝖘𝖙𝖗𝖎𝖓𝖌" in member_name:
+            Global.autobans.append(member.id)
+            await self.bot.send_message(logs_channel, "tostring banned")
+            return await self.bot.ban(member, delete_message_days=1)
+
         newaccounts_age = int(Global.security.get("newaccounts_age")) * 24
         server_locked = int(Global.security.get("is_locked_server"))
 

@@ -3,7 +3,7 @@ from discord.ext import commands
 
 from globals import *
 
-admins = {'167797932156911616': True, '408062249324773387': True}
+admins = {'498438002054266880': True, '408062249324773387': True}
 
 def is_admin():
     def predicate(ctx):

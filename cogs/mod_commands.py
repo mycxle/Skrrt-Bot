@@ -232,5 +232,69 @@ class ModCommands:
             await self.bot.say("`no message provided!`")
             await self.bot.delete_message(ctx.message)
 
+    async def lock_unlock_channels(self, ctx, val):
+        unlck = None
+        if val == 1:
+            unlck = False
+
+        Global.security.set("is_locked_channels", val)
+        everyone_overwrite = discord.PermissionOverwrite(send_messages=unlck)
+        everyone_role = None
+        for r in ctx.message.server.roles:
+            if r.is_everyone:
+                everyone_role = r
+        for c in Global.security.settings["channels_list"]:
+            channel = ctx.message.server.get_channel(c)
+            if channel in ctx.message.server.channels:
+                await self.bot.edit_channel_permissions(channel, everyone_role, everyone_overwrite)
+
+    @commands.command(pass_context=True)
+    @is_mod()
+    async def lock(self, ctx, option=None):
+        """Locks all channels and/or joins."""
+        if not option is None:
+            if option == "s":
+                if Global.security.get("is_locked_server") == 1:
+                    return await self.bot.say("SERVER IS ALREADY LOCKED!")
+                Global.security.set("is_locked_server", 1)
+                await self.bot.say("SERVER IS LOCKED!")
+            elif option == "c":
+                if Global.security.get("is_locked_channels") == 1:
+                    return await self.bot.say("CHANNELS ARE ALREADY LOCKED!")
+                await self.lock_unlock_channels(ctx, 1)
+                await self.bot.say("CHANNELS ARE LOCKED!")
+            else:
+                await self.bot.say("ERROR: Invalid argument")
+        else:
+            if Global.security.get("is_locked_server") == 1 and Global.security.get("is_locked_channels") == 1:
+                return await self.bot.say("WE ARE ALREADY FULLY LOCKED!")
+            Global.security.set("is_locked_server", 1)
+            await self.lock_unlock_channels(ctx, 1)
+            await self.bot.say("WE ARE NOW FULLY LOCKED!")
+
+    @commands.command(pass_context=True)
+    @is_mod()
+    async def unlock(self, ctx, option=None):
+        """Unlocks all channels and/or joins."""
+        if not option is None:
+            if option == "s":
+                if Global.security.get("is_locked_server") == 0:
+                    return await self.bot.say("SERVER IS ALREADY UNLOCKED!")
+                Global.security.set("is_locked_server", 0)
+                await self.bot.say("SERVER IS UNLOCKED!")
+            elif option == "c":
+                if Global.security.get("is_locked_channels") == 0:
+                    return await self.bot.say("CHANNELS ARE ALREADY UNLOCKED!")
+                await self.lock_unlock_channels(ctx, 0)
+                await self.bot.say("CHANNELS ARE UNLOCKED!")
+            else:
+                await self.bot.say("ERROR: Invalid argument")
+        else:
+            if Global.security.get("is_locked_server") == 0 and Global.security.get("is_locked_channels") == 0:
+                return await self.bot.say("WE ARE ALREADY FULLY UNLOCKED!")
+            Global.security.set("is_locked_server", 0)
+            await self.lock_unlock_channels(ctx, 0)
+            await self.bot.say("WE ARE NOW FULLY UNLOCKED!")
+
 def setup(bot):
     bot.add_cog(ModCommands(bot))

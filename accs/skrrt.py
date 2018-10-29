@@ -7,6 +7,7 @@ import secrets
 import sys
 import os
 from checks import *
+from pprint import pprint
 
 class Skrrt:
     def __init__(self, bot):
@@ -30,6 +31,9 @@ class Skrrt:
         print("Bot logged in.")
         await self.bot.change_presence(game=discord.Game(name="with big goth tiddies"))
         Global.all_emojis = list(self.bot.get_all_emojis())
+        for e in Global.all_emojis:
+            if str(e.server.id) == "506321255453163530":
+                print("'{}': '{}',".format(e.name, e.id))
 
     async def on_message(self, message):
         for c in self.chans:

@@ -6,6 +6,8 @@ class AdminCommands:
     def __init__(self, bot):
         self.bot = bot
 
+        # testing
+
     @commands.command(pass_context=True)
     @is_admin()
     async def unbanall(self, ctx):

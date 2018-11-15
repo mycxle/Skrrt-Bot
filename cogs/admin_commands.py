@@ -8,7 +8,7 @@ class AdminCommands:
 
     @commands.command(pass_context=True)
     @is_admin()
-    async def unbanall_command(self, ctx):
+    async def unbanall(self, ctx):
         """Unbans everybody."""
         msg = await self.bot.send_message(ctx.message.channel, 'Unbanning all users...')
         lst = await self.bot.get_bans(ctx.message.server)

@@ -6,6 +6,24 @@ class AdminCommands:
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.command(pass_context=True)
+    @is_admin()
+    async def unbanall_command(self, ctx):
+        """Unbans everybody."""
+        msg = await self.bot.send_message(ctx.message.channel, 'Unbanning all users...')
+        lst = await self.bot.get_bans(ctx.message.server)
+        total = 0
+        print(lst)
+        for item in lst:
+            total += 1
+        lst = await self.bot.get_bans(ctx.message.server)
+        count = 0;
+        for item in lst:
+            await self.bot.unban(ctx.message.server, item)
+            count += 1
+            await self.bot.edit_message(msg, 'Unbanning all users... [{}/{}]'.format(count, total))
+        await self.bot.edit_message(msg, 'Successfully unbanned all {} users!'.format(total))
+
     @commands.command(pass_context=True, aliases=['everyone'])
     @is_admin()
     async def ping(self, ctx, *text):
